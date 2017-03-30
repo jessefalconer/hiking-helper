@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Locate, Plot, Chart</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      #map-canvas {
+        height: 50%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe56ryzBv-vOUJGESScCya29NwlIb854&callback=initMap">
+    </script>
+    <script src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+
+      let elSvc;
+      let map;
+      let polyline;
+      let chart;
+      let marker;
+      let path = new Array();
+
+      //Load columnchart API
+
+      google.load('visualization', '1', {packages: ['columnchart']});
+
+
+      function initMap (location) {
+
+          let currentLocation = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+
+          let mapOptions = {
+            center: currentLocation,
+            zoom: 9,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          }
+
+          map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+          //create a new chart in the elevation_chart DIV
+          chart = new google.visualization.ColumnChart(document.getElementById('elevation_chart'));
+
+          //create an ElevationService
+          elSvc = new google.maps.ElevationService();
+
+          google.maps.event.addListener(map, 'click', function(event) {
+            plotPoints(event.latLng);
+          });
+
+          google.maps.event.addListener(map, 'rightclick', function(event) {
+            plottingComplete(event.latLng);
+          });
+
+      }
+
+      function plotPoints(theLatLng) {
+        path.push(theLatLng);
+        marker = new google.maps.Marker({
+          position: theLatLng,
+          map: map
+        });
+      }
+
+      function plottingComplete(theLatLng) {
+        path.push(theLatLng);
+        marker = new google.maps.Marker({
+          position: theLatLng,
+          map: map
+        });
+
+        let pathOptions = {
+          path: path,
+          strokeColor: '#0000CC',
+          opacity: 0.4,
+          map: map
+        }
+
+        polyline = new google.maps.Polyline(pathOptions);
+
+        let pathRequest = {
+          'path': path,
+          'samples': 256
+        }
+
+        elSvc.getElevationAlongPath(pathRequest, plotElevation);
+      }
+
+      function plotElevation(results, status) {
+        if (status == google.maps.ElevationStatus.OK) {
+          elevations = results
+          let data = new google.visualization.DataTable();
+          data.addColumn('string', 'Sample');
+          data.addColumn('number', 'Elevation');
+          for (let i = 0; i < results.length; i++) {
+            data.addRow(['', elevations[i].elevation])
+          }
+
+          document.getElementById('elevation_chart').style.display='block';
+          chart.draw(data, {
+            width: 640,
+            height: 200,
+            legend: 'none',
+            titleY: 'Elevation (m)'
+          });
+        }
+      }
+
+      $(document).ready(function (){
+        navigator.geolocation.getCurrentPosition(initMap);
+      });
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe56ryzBv-vOUJGESScCya29NwlIb854&callback=initMap">
+    </script>
+
+
+  </head>
+
+  <body>
+    <div id="map-canvas"></div>
+    <div id="elevation_chart"></div>
+  </body>
+
+</html>
