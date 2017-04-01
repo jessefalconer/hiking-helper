@@ -14,12 +14,14 @@
 
   function initMap (location) {
 
+
       let currentLocation = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
 
       let mapOptions = {
         center: currentLocation,
         zoom: 9,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        draggableCursor:'crosshair'
       }
       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
@@ -33,10 +35,39 @@
         plotPoints(event.latLng);
       });
 
+      let input = document.getElementById('pac-input');
+      let searchBox = new google.maps.places.SearchBox(input);
       // google.maps.event.addListener(map, 'rightclick', function(event) {
       //   plottingComplete(event.latLng);
       // });
+      google.maps.event.addListener(searchBox, 'places_changed', function() {
+        let places = searchBox.getPlaces();
+        var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
 
+            // Create a marker for each place.
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+          $("#pac-input").val('');
+      });
   }
 
   function reset() {
@@ -122,9 +153,11 @@
           }
         }
       let totalup = up.reduce(function(a, b) { return a + b; }, 0);
+      totalup = totalup - elevations[0].elevation;
       let totaldown = down.reduce(function(a, b) { return a + b; }, 0);
-      $('#data').append('<li>' + totalup.toFixed(2) + '</li>');
-      $('#data').append('<li>' + totaldown.toFixed(2) + '</li>');
+      totaldown = totaldown - elevations[0].elevation;
+      $('#data').append('<li>' + (totalup + elevations[0].elevation).toFixed(2) + '</li>');
+      $('#data').append('<li>' + (totaldown + elevations[0].elevation).toFixed(2) + '</li>');
       // document.getElementById('elevation-chart').style.display='block';
       chart.draw(data, {
         width: 640,
@@ -140,5 +173,5 @@
   }
 
   $(document).ready(function (){
-    navigator.geolocation.getCurrentPosition(initMap);
+    navigator.geolocation.getCurrentPosition(initMap)
   });
