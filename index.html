@@ -30,7 +30,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://www.google.com/jsapi"></script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe56ryzBv-vOUJGESScCya29NwlIb854&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwe56ryzBv-vOUJGESScCya29NwlIb854&callback=initMap&libraries=places">
     </script>
     <script src="mapbase.js"></script>
 
@@ -39,9 +39,16 @@
   <body>
     <div id="floating-panel">
       <input onclick="reset();" type=button value="Reset">
+      <form id='user-form'>
+        <input name="weight" class="form-control" type="number" placeholder="Weight (kg)"/>
+        <input name="pack-weight" class="form-control" type="number" placeholder="Pack-weight (kg)"/>
+        <input onclick="plottingComplete();" type=button value="Generate">
+      </form>
     </div>
+</form>
     <div id="map-canvas"></div>
-    <div id="elevation_chart"></div>
+    <div id="elevation-chart"></div>
+    <ul id="data"></ul>
   </body>
 
 </html>
