@@ -12,7 +12,7 @@
   let elevator;
   let poly;
 
-  google.load('visualization', '1', {packages: ['columnchart']});
+  google.load('visualization', '1', {packages: ['corechart']});
 
 
   function initMap (location) {
@@ -37,6 +37,30 @@
               displayCoordinates(event.latLng);
     });
 
+    //
+
+
+    // var ptions = {
+    //   backgroundColor: "#475965",
+    //   colors: ['#a0b1bc', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+    //   legend: 'none',
+    //   width: '100%',
+    //   height: '100%',
+    //   animation:{
+    //     duration: 1000,
+    //     easing: 'out',
+    //   },
+    //   startup: true,
+    //   vAxis:  {minValue: '500',
+    //           maxValue: '500',
+    //           viewWindowMode:'explicit',
+    //           viewWindow:{
+    //             max:'500',
+    //             min:'500'
+    //           }
+    //         }
+    //
+    // };
 
     //Rubberband polyline feature, not ready
     // google.maps.event.addListener(map, 'mousemove', function (event) {
@@ -50,7 +74,7 @@
     // });
 
 
-    chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
+    chart = new google.visualization.ColumnChart(document.getElementById('chart'));
 
     elSvc = new google.maps.ElevationService();
 
@@ -122,22 +146,22 @@
   }
 
 //Rubberband Polyline function, not ready
-  function rubberPoly(pnt) {
-
-    if (path.length >= 1){
-    newpoly = [pnt, path[path.length - 1]]
-    poly.setPath(newpoly);
-    }
-
-  }
+  // function rubberPoly(pnt) {
+  //
+  //   if (path.length >= 1){
+  //   newpoly = [pnt, path[path.length - 1]]
+  //   poly.setPath(newpoly);
+  //   }
+  //
+  // }
 
   function displayCoordinates(point) {
 
     let coordsLabel = document.getElementById("tdCursor");
     let lat = point.lat();
-    lat = lat.toFixed(4);
+    lat = lat.toFixed(6);
     let lng = point.lng();
-    lng = lng.toFixed(4);
+    lng = lng.toFixed(6);
 
     let locations = [];
     let location = new google.maps.LatLng(lat, lng);
@@ -148,43 +172,66 @@
       if (status == google.maps.ElevationStatus.OK) {
         if (path.length >= 1) {
           let last_element = path[path.length - 1]
-          let segmentdistance = google.maps.geometry.spherical.computeDistanceBetween(last_element, point);
+          let vector = google.maps.geometry.spherical.computeDistanceBetween(last_element, point);
           let segmentheading = this.google.maps.geometry.spherical.computeHeading(last_element, point);
-
+          let heading1;
+          let heading2;
           switch(true) {
             case ( segmentheading >= -180 && segmentheading < -135 ):
-              segmentheading = (segmentheading + 180).toFixed(2).toString() + "° W of S ";
+              segmentheading = (segmentheading + 180).toFixed(2);
+              heading1="W";
+              heading2="S";
               break;
             case ( segmentheading >= -135 && segmentheading < -90 ):
-              segmentheading = ((-1 * segmentheading) - 90).toFixed(2).toString() + "° S of W ";
+              segmentheading = ((-1 * segmentheading) - 90).toFixed(2);
+              heading1="S";
+              heading2="W";
               break;
             case ( segmentheading >= -90 && segmentheading < -45 ):
-              segmentheading = (segmentheading + 90).toFixed(2).toString() + "° N of W ";
+              segmentheading = (segmentheading + 90).toFixed(2);
+              heading1="N";
+              heading2="W";
               break;
             case ( segmentheading >= -45 && segmentheading < 0 ):
-              segmentheading = (-1 * segmentheading).toFixed(2).toString() + "° W of N ";
+              segmentheading = (-1 * segmentheading).toFixed(2);
+              heading1="W";
+              heading2="N";
               break;
             case ( segmentheading >= 0 && segmentheading < 45 ):
-              segmentheading = (segmentheading).toFixed(2).toString() + "° E of N ";
+              segmentheading = (segmentheading).toFixed(2);
+              heading1="E";
+              heading2="N";
               break;
             case ( segmentheading >= 45 && segmentheading < 90 ):
-              segmentheading = (90 - segmentheading).toFixed(2).toString() + "° N of E ";
+              segmentheading = (90 - segmentheading).toFixed(2);
+              heading1="N";
+              heading2="E";
               break;
             case ( segmentheading >= 90 && segmentheading < 135 ):
-              segmentheading = (segmentheading - 90).toFixed(2).toString() + "° S of E ";
+              segmentheading = (segmentheading - 90).toFixed(2);
+              heading1="S";
+              heading2="E";
               break;
             case ( segmentheading >= 135 && segmentheading < 180 ):
-              segmentheading = (180 - segmentheading).toFixed(2).toString() + "° E of S ";
+              segmentheading = (180 - segmentheading).toFixed(2);
+              heading1="E";
+              heading2="S";
               break;
             default:
-              segmentheading;
+              segmentheading = "Error";
         }
 
       $('#instant-long').html(lng);
       $('#instant-lat').html(lat);
       $('#instant-elev').html(results[0].elevation.toFixed(2) + 'm ');
-      $('#vector').html(segmentdistance.toFixed(2) + 'm ');
-      $('#heading').html(segmentheading + ' ');
+      if (vector > 10000) {
+        $('#vector').html((vector/1000).toFixed(2) + 'km ');
+      } else {
+        $('#vector').html(vector.toFixed(2) + 'm ');
+      }
+      $('#heading-degrees').html(segmentheading);
+      $('#heading1').html(heading1);
+      $('#heading2').html(heading2);
 
       } else {
         $('#instant-long').html(lng);
@@ -199,10 +246,10 @@
   function plotPoints(theLatLng) {
     if (path.length >= 1) {
       let last_element = path[path.length - 1]
-      let segmentdistance = google.maps.geometry.spherical.computeDistanceBetween(last_element, theLatLng);
+      let vector = google.maps.geometry.spherical.computeDistanceBetween(last_element, theLatLng);
       let segmentheading = this.google.maps.geometry.spherical.computeHeading(last_element, theLatLng);
 
-      lineardistance.push(segmentdistance);
+      lineardistance.push(vector);
     }
     path.push(theLatLng);
     if (path.length == 1) {
@@ -294,20 +341,28 @@
       $('#finishing-elevation').append(finishingelevation.toFixed(2) + 'm');
       $('#average-grade').append(averagegrade.toFixed(2) + '%');
 
-      chart.draw(data, {
+      let chartOptions =  {
+        animation: {
+          startup: true
+        },
         backgroundColor: "#475965",
-        colors: ['black', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+        colors: ['#a0b1bc', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
         width: 1316,
         height: 152,
-        legend: 'none'
-      });
+        legend: 'none',
+        vAxis: {
+          textStyle:{color: ['#FFF']}
+        },
+      }
+
+      chart.draw(data, chartOptions);
 
       let difficulty;
 
       switch(true) {
-        case ( totalup >= 10000 || pace > 10 ):
-          difficulty = "Extreme Terrain and Endurance";
-          break;
+        // case ( totalup >= 10000 || pace > 10 ):
+        //   difficulty = "Extreme Terrain and Endurance";
+        //   break;
         case ( totalup >= 15000 ):
           difficulty = "Extreme Terrain";
           break;
@@ -320,21 +375,20 @@
         case ( totalup >= 2000 && pace > 6):
           difficulty = "Moderate Hike";
           break;
-        case ( totalup < 300 && pace > 0.75):
-          difficulty = "Moderate Walk";
+        case ( totalup > 300 && pace > 1.5):
+          difficulty = "Moderate Hike";
           break;
-        case ( totalup >= 500 && pace > 2 ):
+        case ( totalup >= 150 && pace > 1 ):
           difficulty = "Easy Hike";
           break;
-        case ( totalup < 100 && pace < 0.6 ):
-          difficulty = "Easy Walk";
+        case ( totalup < 150 && pace > 0.6 ):
+          difficulty = "Quick Hike";
           break;
         default:
           difficulty = "Short Walk";
       }
 
       $('#difficulty').append(difficulty);
-      $('#chart').append(chart)
       let energy = (totalweight * -9.81 * totaldown * 0.8 * 0.000239006) + (totalweight * 9.81 * totalup * 0.000239006 * 1.1) + (45 * (totalabsolutedistance/1000)) + (weight * pace);
       $('#calories').append(energy.toFixed(0));
 
