@@ -222,6 +222,9 @@
   }
 
   function plottingComplete() {
+    if (path.length < 1) {
+      alert("Draw a path first!");
+    } else {
     $('.results').html("&nbsp;");
     let last_marker = path[path.length - 1]
     markers.push(new google.maps.Marker({
@@ -249,6 +252,7 @@
     }
 
     elSvc.getElevationAlongPath(pathRequest, plotElevation);
+  }
   }
 
   function plotElevation(results, status) {
