@@ -110,6 +110,82 @@
       $("#pac-input").val('');
       });
       center_map(map);
+
+      google.setOnLoadCallback(drawChart);
+        let data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['1',     11],
+          ['2',      2],
+          ['3',  2],
+          ['4', 3],
+          ['5',    7],
+          ['6', 20],
+          ['7',    17],
+          ['8',     11],
+          ['9',      2],
+          ['10',  9]
+        ]);
+
+      let chart1 = new google.visualization.ColumnChart(document.getElementById('chart'));
+        let options1 = {
+          backgroundColor: "#475965",
+          colors: ['#a0b1bc', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
+          vAxis: {
+          textStyle:{color:'#FFF'}},
+          width: 1316,
+          height: 152,
+          legend: 'none',
+          bar: {groupWidth: '100%'},
+          hAxis: { textPosition: 'none' },
+      animation:{
+        'duration': 5000,
+        'easing': 'out',
+      },
+      vAxis: {minValue:0, maxValue:50}
+      };
+      setInterval(change, 3000);
+      function drawChart() {
+        chart.draw(data, options1);
+      }
+
+      let ch=0;
+      function change(){
+        if(ch==0){
+        data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['1',     9],
+          ['2',      20],
+          ['3',  15],
+          ['4', 20],
+          ['5',    17],
+          ['6',     10],
+          ['7',      2],
+          ['8',  14],
+          ['9', 24],
+          ['10',    40]
+        ]);
+            ch=1;
+        }
+        else if(ch==1){
+            data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['1',     10],
+          ['2',      2],
+          ['3',  12],
+          ['4', 24],
+          ['5',    41],
+          ['6',     6],
+          ['7',      40],
+          ['8',  20],
+          ['9', 2],
+          ['10',    17]
+        ]);
+            ch=0;
+        }
+        chart1.draw(data, options1);
+      }
+
+
   }
 
   function center_map(map) {
