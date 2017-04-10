@@ -17,16 +17,16 @@
       background-color: #3268D5;
       min-width: 83.333333vw;
       min-height: 10vh;
-      max-width: 83.333333vw;
-      max-height: 10vh;
+      /*max-width: 83.333333vw;*/
+      /*max-height: 10vh;*/
       }
 
       #map-canvas {
         background-color: #476553;
         min-width: 83.333333vw;
         min-height: 65vh;
-        max-width: 83.333333vw;
-        max-height: 65vh;
+        /*max-width: 83.333333vw;*/
+        /*max-height: 65vh;*/
       }
 
       #chart {
@@ -53,9 +53,9 @@
         font-size: 3vh;
         padding-left: 35px;
         background: -webkit-linear-gradient(left, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Safari 5.1 to 6.0 */
-background: -o-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Opera 11.1 to 12.0 */
-background: -moz-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Firefox 3.6 to 15 */
-background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* Standard syntax (must be last) */
+        background: -o-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* Standard syntax (must be last) */
       }
 
       #floating-panel {
@@ -63,8 +63,8 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
         font-family: 'Roboto','sans-serif';
         background-color: #4285F6;
         min-width: 16.6666666vw;
-        min-height: 75vh;
-        max-width: 16.6666666vw;
+        /*min-height: 75vh;*/
+        /*max-width: 16.6666666vw;*/
         max-height: 75vh;
         overflow: scroll;
 
@@ -84,27 +84,6 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
         font-family: 'Roboto','sans-serif';
         width: 70%;
         text-align: left;
-      }
-
-      #start {
-        color: #ffffff;
-        max-width: 33.33333333vw;
-        min-width: 33.33333333vw;
-        min-height: 5vh;
-        max-height: 5vh;
-        background-color: #38424B;
-        text-align: left;
-        line-height: 5vh;
-      }
-      #finish {
-        color: #ffffff;
-        max-width: 33.33333333vw;
-        min-width: 33.33333333vw;
-        min-height: 5vh;
-        max-height: 5vh;
-        background-color: #38424B;
-        text-align: right;
-        line-height: 5vh;
       }
 
       #user-form-results {
@@ -231,6 +210,10 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
         font-size: 20px;
       }
 
+      #results-estimate{
+        margin-bottom: 10px;
+      }
+
       .results-estimate {
         margin-top: 10px;
         border-radius: 3px;
@@ -299,7 +282,9 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
         height: 34px;
       }
 
-      .switch input {display:none;}
+      .switch input {
+        display:none;
+      }
 
       .slider {
         position: absolute;
@@ -400,6 +385,7 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
 
       .searchbox{
         right: 10px;
+        top: 40px;
         margin-top: 12.5px;
         position: fixed;
         min-width:100px;
@@ -428,6 +414,7 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
         padding:0px 55px 0px 20px;
         font-size:20px;
         color: #ffffff;
+        position: relative;
       }
 
       .searchbox-input::-webkit-input-placeholder {
@@ -567,11 +554,11 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
   <div class="container-fluid">
 
     <div class="row">
-      <div class="col-md-12" id="data">Hiking Sandbox</div>
+      <div class="col-md-12 col-sm-12" id="data">Hiking Sandbox</div>
     </div>
 
     <div class="row">
-      <div class="col-md-2" id="floating-panel">
+      <div class="col-md-2 col-sm-12" id="floating-panel">
         <div class="input-container">
 
           <input id="reset" onclick="reset();" type="button" value="Reset" class="waves-effect waves-light btn"/>
@@ -626,22 +613,22 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
 
       </div>
 
-      <div class="col-md-10">
+      <div class="col-md-10 col-sm-12">
         <div class="row" id="header">
 
-          <div class="col-md-3" id="realtime">
+          <div class="col-md-3 col-sm-3" id="realtime">
                 <label>Longitude</label>
                 <div id="instant-long" class="hud">&nbsp;</div>
                 <label>Latitude</label>
                 <div id="instant-lat" class="hud">&nbsp;</div>
             </div>
-            <div class="col-md-3" id="realtime">
+            <div class="col-md-3 col-sm-3" id="realtime">
                 <label>Elevation</label>
                 <div id="instant-elev" class="hud">&nbsp;</div>
                 <label>Distance Vector</label>
                 <div id="vector" class="hud">&nbsp;</div>
             </div>
-            <div class="col-md-5" id="realtime-heading">
+            <div class="col-md-5 col-sm-5" id="realtime-heading">
                 <label class="label-heading">Heading</label>
                 <div id="heading-degrees" class="div-hud-heading">&nbsp;</div>
                 <label class="label-degrees">°</label>
@@ -650,7 +637,7 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
                 <div id="heading2" class="div-hud-heading-1">&nbsp;</div>
             </div>
 
-            <div class="col-md-1">
+            <div class="col-md-1 col-sm-1">
                   <form class="searchbox">
                       <input id="pac-input" type="search" placeholder="Search a place..." name="search" class="searchbox-input" onkeyup="buttonUp();" required>
                       <input type="submit" class="searchbox-submit" value="Teleport">
@@ -659,15 +646,16 @@ background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)
             </div>
 
         </div>
-        <div class="row" id="map-canvas">
+        <div class="row">
+          <div class="col-md-12 col-sm-12" id="map-canvas">
+          </div>
 
         </div>
       </div>
     </div>
 
-    <div class="row" id="elevation-chart">
-
-      <div id="chart">
+    <div class="row">
+      <div class="col-md-12 sm-12" id="elevation-chart">
       </div>
     </div>
 
