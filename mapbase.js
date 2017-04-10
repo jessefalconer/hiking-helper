@@ -74,7 +74,7 @@
     // });
 
 
-    chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+    chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
 
     elSvc = new google.maps.ElevationService();
 
@@ -423,7 +423,7 @@
         },
         backgroundColor: "#475965",
         colors: ['#a0b1bc', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
-        width: 1316,
+        width: 1375,
         height: 152,
         legend: 'none',
         vAxis: {
