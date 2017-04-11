@@ -229,17 +229,6 @@
         line-height: 30px;
       }
 
-      .switch-form label {
-        align-content: center;
-        vertical-align: middle;
-        text-align: center;
-        color: #ffffff;
-        display: inline-block;
-        font-family: 'Roboto','sans-serif';
-        width: 31%;
-      }
-
-
       .user-input {
         width: 50px;
         text-align: center;
@@ -275,11 +264,47 @@
         text-align: center;
         }
 
+        /*.switch-form label {
+          vertical-align: middle;
+          text-align: center;
+          color: #ffffff;
+          display: inline-block;
+          font-family: 'Roboto','sans-serif';
+          width: 100%;
+        }*/
+
+        #metric {
+          vertical-align: middle;
+          text-align: right;
+          color: #ffffff;
+          /*display: inline-block;*/
+          font-family: 'Roboto','sans-serif';
+          width: 100%;
+          float: right;
+        }
+
+        #imperial {
+          vertical-align: middle;
+          text-align: left;
+          color: #ffffff;
+          /*display: inline-block;*/
+          font-family: 'Roboto','sans-serif';
+          width: 100%;
+          float: left;
+        }
+
+        .switch-form {
+          vertical-align: middle;
+          color: #ffffff;
+          display: inline-block;
+          font-family: 'Roboto','sans-serif';
+          width: 100%;
+        }
+
       .switch {
         position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
+        width: 100%;
+        height: 2.5em;
       }
 
       .switch input {
@@ -289,24 +314,26 @@
       .slider {
         position: absolute;
         cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        top: 0em;
+        /*left: 0;*/
+        /*right: 0;*/
+        bottom: 0em;
         background-color: #ccc;
         -webkit-transition: .4s;
         transition: .4s;
         border-radius: 3px;
+        width: 100%;
+        /*float: left;*/
       }
 
       .slider:before {
         position: absolute;
         content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
+        height: 80%;
+        width: 49%;
+        left: 0.3em;
+        bottom: 0.3em;
+        background-color: #ffffff;
         -webkit-transition: .4s;
         transition: .4s;
         border-radius: 3px;
@@ -321,9 +348,9 @@
       }
 
       input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
+        -webkit-transform: translateX(100%);
+        -ms-transform: translateX(100%);
+        transform: translateX(100%);
       }
 
       #description {
@@ -563,14 +590,22 @@
 
           <input id="reset" onclick="reset();" type="button" value="Reset" class="waves-effect waves-light btn"/>
 
-          <form class="switch-form">
-            <label>Metric</label>
+      <div class="row">
+        <form class="switch-form">
+          <div class="col-md-4 col-sm-4">
+            <label id="metric">Metric</label>
+          </div>
+          <div class="col-md-4 col-sm-4">
             <label id="switch" class="switch">
               <input type="checkbox">
-              <div class="slider"></div>
+                <div class="slider"></div>
             </label>
-            <label>Imperial</label>
-          </form>
+          </div>
+          <div class="col-md-4 col-sm-4">
+            <label id="imperial">Imperial</label>
+          </div>
+        </form>
+      </div>
 
           <form id="user-form">
             <label>Path Samples</label>
