@@ -479,10 +479,10 @@
     }
   }
 
-  // $(document).ready(function (){
-  //   navigator.geolocation.getCurrentPosition(initMap);
-  //   document.getElementById("samples").defaultValue = "300";
-  // });
+  $(document).ready(function (){
+    navigator.geolocation.getCurrentPosition(initMap);
+    document.getElementById("samples").defaultValue = "300";
+  });
   $(document).ready(function(){
              var submitIcon = $('.searchbox-icon');
              var inputBox = $('.searchbox-input');
