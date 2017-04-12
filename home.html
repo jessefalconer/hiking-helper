@@ -5,13 +5,13 @@
     <!-- <meta name="viewport" content="initial-scale=1.0, user-scalable=no"> -->
     <meta charset="utf-8">
     <style>
-
       html, body {
-        height: 100%;
+        min-height: 100vh;
+        min-width: 100vw;
         font-family: 'Roboto', 'sans-serif';
-        /*background-color: #3268D5;*/
+        background-color: #4285F6;
+        color: #4285F6;
       }
-
       #header {
       color: #ffffff;
       background-color: #3268D5;
@@ -20,7 +20,6 @@
       /*max-width: 83.333333vw;*/
       /*max-height: 10vh;*/
       }
-
       #map-canvas {
         background-color: #476553;
         min-width: 83.333333vw;
@@ -28,11 +27,8 @@
         /*max-width: 83.333333vw;*/
         /*max-height: 65vh;*/
       }
-
       #chart {
-
       }
-
       #elevation-chart {
         background-color:	#475965;
         min-height: 20vh;
@@ -40,7 +36,6 @@
         max-height: 20vh;
         max-width: 100vw;
       }
-
       #data {
         color: #ffffff;
         background-color: #38424B;
@@ -57,9 +52,7 @@
         background: -moz-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Firefox 3.6 to 15 */
         background: linear-gradient(to right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* Standard syntax (must be last) */
       }
-
       #floating-panel {
-
         font-family: 'Roboto','sans-serif';
         background-color: #4285F6;
         min-width: 16.6666666vw;
@@ -67,128 +60,129 @@
         /*max-width: 16.6666666vw;*/
         max-height: 75vh;
         overflow: scroll;
-
-      }
-
-      #company {
-        vertical-align: middle;
       }
 
       #user-form {
         margin: 5px;
       }
-
       #user-form label {
         color: #ffffff;
         display: inline-block;
         font-family: 'Roboto','sans-serif';
-        width: 70%;
+        width: 50%;
         text-align: left;
       }
 
-      #user-form-results {
-        display: inline-block;
-      }
-      #user-form-results label {
-        color: #ffffff;
-        /*display: inline-block;*/
-        font-family: 'Roboto','sans-serif';
-        width: 50%;
-        text-align: left;
-        line-height: 20px;
-        font-size: 11px;
+      #user-form input {
+        width: 40%;
+        float: right;
+
       }
 
       #realtime {
         margin-top: 1.4%;
       }
-
       #realtime label {
         color: #ffffff;
         display: inline-block;
         font-family: 'Roboto','sans-serif';
         width: 50%;
-        text-align: left;
+        text-align: center;
         padding-right: 3px;
       }
-
       .hud{
         border-radius: 3px;
         color: black;
         background-color: #E8E8E8;
-        display: inline-block;
+        /*display: inline-block;*/
         font-size: 15px;
         text-align: right;
-        min-height: 100%;
+        /*min-height: 100%;*/
         overflow: hidden;
         font-family: 'Roboto','sans-serif';
         width: 50%;
         float: right;
         line-height: 20px;
       }
-
       #realtime-heading {
         font-family: 'Roboto','sans-serif';
         margin-top: 2.5%;
       }
-
+      .realtime-container {
+        margin-left: 15%;
+        /*display: inline;*/
+      }
       .label-heading {
         color: #ffffff;
         font-family: 'Roboto','sans-serif';
-        width: 20%;
-        text-align: left;
+        min-width: 20%;
+        text-align: center;
         float: left;
+        margin-left: 1%;
       }
-
       .div-hud-heading {
         border-radius: 3px;
         color: black;
         background-color: #E8E8E8;
-        display: inline-block;
         font-size: 15px;
         overflow: visible;
         font-family: 'Roboto','sans-serif';
-        width: 15%;
+        min-width: 15%;
         line-height: 20px;
         float: left;
         text-align: center;
+        margin-left: 1%;
       }
-
       .label-of {
         color: #ffffff;
         font-family: 'Roboto','sans-serif';
-        width: 5%;
+        min-width: 5%;
         text-align: center;
         float: left;
+        margin-left: 1%;
       }
       .label-degrees {
         color: #ffffff;
         font-family: 'Roboto','sans-serif';
-        width: 3%;
+        min-width: 3%;
         text-align: center;
         float: left;
+        margin-left: 1%;
       }
-
       .div-hud-heading-1 {
         border-radius: 3px;
         color: black;
         background-color: #E8E8E8;
-        display: inline-block;
         font-size: 15px;
         min-height: 10%;
         overflow: visible;
         font-family: 'Roboto','sans-serif';
-        width: 7.5%;
+        min-width: 7.5%;
         line-height: 20px;
         float: left;
         text-align: center;
+        margin-left: 1%;
+      }
+
+      #user-form-results {
+        display: inline-block;
+        width: 100%;
+      }
+      #user-form-results label {
+        color: #ffffff;
+        /*display: inline-block;*/
+        font-family: 'Roboto','sans-serif';
+        width: 50%;
+        /*text-align: left;*/
+        line-height: 20px;
+        font-size: 11px;
       }
 
       .results {
         border-radius: 3px;
         color: black;
         background-color: #ffffff;
-        display: inline-block;
+        /*display: inline-block;*/
         font-size: 15px;
         text-align: center;
         min-height: 100%;
@@ -198,7 +192,6 @@
         float: right;
         line-height: 20px;
       }
-
       #results-estimate label{
         margin-top: 10px;
         color: #ffffff;
@@ -209,11 +202,9 @@
         line-height: 20px;
         font-size: 20px;
       }
-
       #results-estimate{
         margin-bottom: 10px;
       }
-
       .results-estimate {
         margin-top: 10px;
         border-radius: 3px;
@@ -228,7 +219,6 @@
         width: 100%;
         line-height: 30px;
       }
-
       .user-input {
         width: 50px;
         text-align: center;
@@ -237,7 +227,6 @@
         border-radius: 3px;
         border: none;
       }
-
       #reset {
         margin-top: 10px;
         margin-bottom: 10px;
@@ -250,7 +239,6 @@
         width: 50%;
         text-align: center;
       }
-
       #generate {
         margin-top: 10px;
         margin-bottom: 10px;
@@ -262,8 +250,8 @@
         border: none;
         width: 50%;
         text-align: center;
-        }
 
+        }
         /*.switch-form label {
           vertical-align: middle;
           text-align: center;
@@ -272,27 +260,26 @@
           font-family: 'Roboto','sans-serif';
           width: 100%;
         }*/
-
         #metric {
           vertical-align: middle;
-          text-align: right;
+          text-align: center;
           color: #ffffff;
           /*display: inline-block;*/
           font-family: 'Roboto','sans-serif';
-          width: 100%;
+          width: 50%;
           float: right;
+          line-height: 2.5em;
         }
-
         #imperial {
           vertical-align: middle;
-          text-align: left;
+          text-align: center;
           color: #ffffff;
           /*display: inline-block;*/
           font-family: 'Roboto','sans-serif';
-          width: 100%;
+          width: 50%;
           float: left;
+          line-height: 2.5em;
         }
-
         .switch-form {
           vertical-align: middle;
           color: #ffffff;
@@ -300,17 +287,14 @@
           font-family: 'Roboto','sans-serif';
           width: 100%;
         }
-
       .switch {
         position: relative;
         width: 100%;
         height: 2.5em;
       }
-
       .switch input {
         display:none;
       }
-
       .slider {
         position: absolute;
         cursor: pointer;
@@ -325,52 +309,43 @@
         width: 100%;
         /*float: left;*/
       }
-
       .slider:before {
         position: absolute;
         content: "";
         height: 80%;
         width: 50%;
-        left: 5%;
+        left: 1%;
         bottom: 10%;
         background-color: #ffffff;
         -webkit-transition: .4s;
         transition: .4s;
         border-radius: 3px;
       }
-
       input:checked + .slider {
         background-color: #3268D5;
       }
-
       input:focus + .slider {
         box-shadow: 0 0 1px #3268D5;
       }
-
       input:checked + .slider:before {
-        -webkit-transform: translateX(80%);
-        -ms-transform: translateX(80%);
-        transform: translateX(80%);
+        -webkit-transform: translateX(96%);
+        -ms-transform: translateX(96%);
+        transform: translateX(96%);
       }
-
       #description {
             font-family: 'Roboto';
             font-size: 15px;
             font-weight: 300;
           }
-
       #infowindow-content .title {
             font-weight: bold;
           }
-
           #infowindow-content {
             display: none;
           }
-
           #map #infowindow-content {
             display: inline;
           }
-
           .pac-card {
             margin: 10px 10px 0 0;
             border-radius: 2px 0 0 2px;
@@ -380,23 +355,19 @@
             background-color: #F8FFFE;
             font-family: Helvetica
           }
-
           #pac-container {
             padding-bottom: 12px;
             margin-right: 12px;
           }
-
           .pac-controls {
             display: inline-block;
             padding: 5px 11px;
           }
-
           .pac-controls label {
             font-family: 'Roboto';
             font-size: 13px;
             font-weight: 300;
           }
-
           #pac-input {
             background-color:  #5F97F6;
             font-family: 'Roboto';
@@ -407,9 +378,7 @@
             text-overflow: ellipsis;
             width: 400px;
           }
-
           /**/
-
       .searchbox{
         right: 10px;
         top: 40px;
@@ -427,7 +396,6 @@
         -o-transition: width 0.3s;
         transition: width 0.3s;
       }
-
       .searchbox-input{
         overflow:hidden;
         top:0;
@@ -443,25 +411,19 @@
         color: #ffffff;
         position: relative;
       }
-
       .searchbox-input::-webkit-input-placeholder {
         color: #ffffff;
       }
-
       .searchbox-input:-moz-placeholder {
         color: #ffffff;
       }
-
       .searchbox-input::-moz-placeholder {
         color: #ffffff;
       }
-
       .searchbox-input:-ms-input-placeholder {
         color: #ffffff;
       }
-
       .searchbox-icon,
-
       .searchbox-submit{
         width:100px;
         height:50px;
@@ -480,13 +442,10 @@
         cursor:pointer;
         color:#ffffff;
         background: #4285F6;
-
         }
-
       .searchbox-open{
         width:40%;
       }
-
       .byline{
         position:absolute;
         top:150px;
@@ -494,34 +453,27 @@
         text-align:center;
         font-size:18px;
       }
-
       .byline a{
         text-decoration:none;
         color: #ffffff;
       }
-
       .form-control{
         background: #4285F6;
       }
-
       #description {
             font-family: 'Roboto';
             font-size: 15px;
             font-weight: 300;
           }
-
       #infowindow-content .title {
             font-weight: bold;
           }
-
       #infowindow-content {
             display: none;
           }
-
       #map #infowindow-content {
             display: inline;
           }
-
       .pac-card {
             margin: 10px 10px 0 0;
             border-radius: 2px 0 0 2px;
@@ -531,23 +483,19 @@
             background-color: #F8FFFE;
             font-family: Helvetica
           }
-
       #pac-container {
             padding-bottom: 12px;
             margin-right: 12px;
           }
-
       .pac-controls {
             display: inline-block;
             padding: 5px 11px;
           }
-
       .pac-controls label {
             font-family: 'Roboto';
             font-size: 13px;
             font-weight: 300;
           }
-
       #pac-input {
             background-color:  #5F97F6;
             font-family: 'Roboto';
@@ -558,7 +506,6 @@
             text-overflow: ellipsis;
             width: 400px;
           }
-
     </style>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -592,17 +539,14 @@
 
       <div class="row">
         <form class="switch-form">
-          <div class="col-md-4 col-sm-4">
-            <label id="metric">Metric</label>
-          </div>
-          <div class="col-md-4 col-sm-4">
+          <div class="col-md-12 col-sm-12">
             <label class="switch">
               <input type="checkbox">
-                <div class="slider"></div>
+                <div class="slider">
+                  <label id="metric">Metric &#x2713;</label>
+                  <label id="imperial">Imperial &#x2713;</label>
+                </div>
             </label>
-          </div>
-          <div class="col-md-4 col-sm-4">
-            <label id="imperial">Imperial</label>
           </div>
         </form>
       </div>
@@ -614,8 +558,9 @@
               <input id="weight" class="user-input" name="weight" type="number"/>
             <label>Pack Weight</label>
             <input id="pack-weight" class="user-input" name="pack-weight" type="number"/>
-            <input onclick="plottingComplete();" type=button value="Generate" class="waves-effect waves-light btn" id="generate">
           </form>
+
+          <input onclick="plottingComplete();" type=button value="Generate" class="waves-effect waves-light btn" id="generate">
 
           <form id='user-form-results'>
             <label>Calories</label>
@@ -651,34 +596,36 @@
       <div class="col-md-10 col-sm-12">
         <div class="row" id="header">
 
-          <div class="col-md-3 col-sm-3" id="realtime">
+          <div class="col-md-4 col-sm-4" id="realtime">
                 <label>Longitude</label>
                 <div id="instant-long" class="hud">&nbsp;</div>
                 <label>Latitude</label>
                 <div id="instant-lat" class="hud">&nbsp;</div>
             </div>
-            <div class="col-md-3 col-sm-3" id="realtime">
+            <div class="col-md-4 col-sm-4" id="realtime">
                 <label>Elevation</label>
                 <div id="instant-elev" class="hud">&nbsp;</div>
                 <label>Distance Vector</label>
                 <div id="vector" class="hud">&nbsp;</div>
             </div>
-            <div class="col-md-5 col-sm-5" id="realtime-heading">
+            <div class="col-md-4 col-sm-4" id="realtime-heading">
+              <div class="realtime-container">
                 <label class="label-heading">Heading</label>
                 <div id="heading-degrees" class="div-hud-heading">&nbsp;</div>
                 <label class="label-degrees">°</label>
                 <div id="heading1" class="div-hud-heading-1">&nbsp;</div>
                 <label class="label-of">of</label>
                 <div id="heading2" class="div-hud-heading-1">&nbsp;</div>
+              </div>
             </div>
 
-            <div class="col-md-1 col-sm-1">
+            <!-- <div class="col-md-1 col-sm-1">
                   <form class="searchbox">
                       <input id="pac-input" type="search" placeholder="Search a place..." name="search" class="searchbox-input" onkeyup="buttonUp();" required>
                       <input type="submit" class="searchbox-submit" value="Teleport">
                       <span class="searchbox-icon">Search</span>
                   </form>
-            </div>
+            </div> -->
 
         </div>
         <div class="row">
