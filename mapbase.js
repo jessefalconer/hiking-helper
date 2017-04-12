@@ -479,15 +479,16 @@
     }
   }
 
-  $(document).ready(function (){
-    navigator.geolocation.getCurrentPosition(initMap);
-    document.getElementById("samples").defaultValue = "300";
-  });
+  // $(document).ready(function (){
+  //   navigator.geolocation.getCurrentPosition(initMap);
+  //   document.getElementById("samples").defaultValue = "300";
+  // });
   $(document).ready(function(){
-             var submitIcon = $('.searchbox-icon');
-             var inputBox = $('.searchbox-input');
-             var searchBox = $('.searchbox');
-             var isOpen = false;
+
+             let submitIcon = $('.searchbox-icon');
+             let inputBox = $('.searchbox-input');
+             let searchBox = $('.searchbox');
+             let isOpen = false;
              submitIcon.click(function(){
                  if(isOpen == false){
                      searchBox.addClass('searchbox-open');
@@ -522,3 +523,5 @@
                      $('.searchbox-icon').css('display','block');
                  }
              }
+
+// $("#map-canvas").height($("#floating-panel").height());
