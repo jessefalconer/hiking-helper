@@ -23,12 +23,12 @@ function initMap (location) {
     function(){
       if ($(this).is(':checked')) {
         units = "imperial";
-          if (generated == false) {
+          if (generated != false) {
             toImperial();
           }
       } else {
         units = "metric";
-          if (generated == false) {
+          if (generated != false) {
             toMetric();
           }
       }
