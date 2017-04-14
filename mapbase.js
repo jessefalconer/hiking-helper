@@ -349,6 +349,7 @@ function displayCoordinates(point) {
 }
 
 function plotPoints(theLatLng) {
+  generated = false;
   if (path.length >= 1) {
     let last_element = path[path.length - 1]
     let vector = google.maps.geometry.spherical.computeDistanceBetween(last_element, theLatLng);
@@ -378,14 +379,19 @@ function plotPoints(theLatLng) {
 function plottingComplete() {
   if (path.length < 2) {
     alert("Draw a path first!");
+  } else if (generated == true) {
+    alert("No new paths added!");
   } else {
-    generated = false;
+    generated = true;
+    $('#difficulty').html('&nbsp;');
     $('.results').html("&nbsp;");
     let last_marker = path[path.length - 1]
     markers.push(new google.maps.Marker({
       position: last_marker,
       map: map
     }));
+
+    window.totalMarkers = markers.length
 
     window.samples = $('#user-form > input[name="samples"]').val();
     if (units == "imperial") {
@@ -415,19 +421,21 @@ function plottingComplete() {
 }
 
 function plotElevation(results, status) {
-  let adjacent = (totaldistance/(samples - 1))
+  let energy = 0;
+  let adjacent = (totaldistance/(samples - 1));
   let totalweight = (pweight + weight);
     if (status == google.maps.ElevationStatus.OK) {
-      elevations = results
+      elevations = results;
       let data = new google.visualization.DataTable();
       data.addColumn('string', 'Sample');
       data.addColumn('number', 'Elevation');
 
         for (let i = 0; i < results.length; i++) {
-          data.addRow(['', elevations[i].elevation])
+          data.addRow(['', elevations[i].elevation]);
         }
+
         for (let i = 0; i < elevations.length - 1; i++) {
-          absolutedistance.push(((adjacent**2)+((elevations[i+1].elevation - elevations[i].elevation)**2))**0.5)
+          absolutedistance.push(((adjacent**2)+((elevations[i+1].elevation - elevations[i].elevation)**2))**0.5);
           if (elevations[i+1].elevation - elevations[i].elevation >= 0) {
             up.push(elevations[i+1].elevation - elevations[i].elevation);
           } else {
@@ -435,13 +443,13 @@ function plotElevation(results, status) {
           }
         }
 
-      window.startingelevation = elevations[0].elevation
-      window.finishingelevation = elevations[samples - 1].elevation
+      window.startingelevation = elevations[0].elevation;
+      window.finishingelevation = elevations[samples - 1].elevation;
       window.totalabsolutedistance = absolutedistance.reduce(function(a, b) { return a + b; }, 0);
       let pace = (totalabsolutedistance / 2000).toFixed(1);
       window.totalup = up.reduce(function(a, b) { return a + b; }, 0);
       window.totaldown = down.reduce(function(a, b) { return a + b; }, 0);
-      let averagegrade = ((finishingelevation - startingelevation)/totaldistance)*100
+      let averagegrade = ((finishingelevation - startingelevation)/totaldistance)*100;
 
     if (units == "imperial"){
       $('#elevation-gain').append((totalup*3.28084).toFixed(0) + 'ft');
@@ -504,7 +512,7 @@ function plotElevation(results, status) {
         difficulty = "Short Walk";
     }
 
-    let energy = (totalweight * -9.81 * totaldown * 0.8 * 0.000239006) + (totalweight * 9.81 * totalup * 0.000239006 * 1.1) + (45 * (totalabsolutedistance/1000)) + (weight * pace);
+    energy = (totalweight * -9.81 * totaldown * 0.8 * 0.000239006) + (totalweight * 9.81 * totalup * 0.000239006 * 1.1) + (45 * (totalabsolutedistance/1000)) + (weight * pace);
 
     let efficiency;
       if (averagegrade >= 0) {
