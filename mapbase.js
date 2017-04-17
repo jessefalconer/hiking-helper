@@ -5,8 +5,8 @@
   let chart;
   let markers = new Array();
   let path = new Array();
-  let lineardistance = new Array();
-  let absolutedistance = new Array();
+  let linearDistance = new Array();
+  let absoluteDistance = new Array();
   let down = new Array();
   let up = new Array();
   let elevator;
@@ -199,11 +199,11 @@ function reset() {
   for (let i = 0; i < polyline.length; i++) {
     polyline[i].setMap(null)
   }
-  absolutedistance = new Array();
+  absoluteDistance = new Array();
   markers = new Array();
   path = new Array();
   polyline = new Array ();
-  lineardistance = new Array ();
+  linearDistance = new Array ();
   down = new Array();
   up = new Array();
   $('.results').html("&nbsp;");
@@ -229,12 +229,12 @@ function toImperial() {
   $('#map-distance').html("&nbsp;");
   $('#starting-elevation').html("&nbsp;");
   $('#finishing-elevation').html("&nbsp;");
-  $('#elevation-gain').html((totalup*3.28084).toFixed(0) + 'ft');
-  $('#elevation-loss').html((totaldown * -3.28084).toFixed(0) + 'ft');
-  $('#distance').html( (totalabsolutedistance/1000*0.62137121212121).toFixed(2) + 'mi');
-  $('#map-distance').html( (totaldistance/1000*0.62137121212121).toFixed(2) + 'mi');
-  $('#starting-elevation').html((startingelevation*3.28084).toFixed(2) + 'ft');
-  $('#finishing-elevation').html((finishingelevation*3.28084).toFixed(2) + 'ft');
+  $('#elevation-gain').html((totalUp*3.28084).toFixed(0) + 'ft');
+  $('#elevation-loss').html((totalDown * -3.28084).toFixed(0) + 'ft');
+  $('#distance').html( (totalAbsoluteDistance/1000*0.62137121212121).toFixed(2) + 'mi');
+  $('#map-distance').html( (totalDistance/1000*0.62137121212121).toFixed(2) + 'mi');
+  $('#starting-elevation').html((startingElevation*3.28084).toFixed(2) + 'ft');
+  $('#finishing-elevation').html((finishingElevation*3.28084).toFixed(2) + 'ft');
 }
 
 function toMetric() {
@@ -244,12 +244,12 @@ function toMetric() {
   $('#map-distance').html("&nbsp;");
   $('#starting-elevation').html("&nbsp;");
   $('#finishing-elevation').html("&nbsp;");
-  $('#elevation-gain').html((totalup).toFixed(0) + 'm');
-  $('#elevation-loss').html((totaldown * -1).toFixed(0) + 'm');
-  $('#distance').html( (totalabsolutedistance/1000).toFixed(2) + 'km');
-  $('#map-distance').html( (totaldistance/1000).toFixed(2) + 'km');
-  $('#starting-elevation').html(startingelevation.toFixed(2) + 'm');
-  $('#finishing-elevation').html(finishingelevation.toFixed(2) + 'm');
+  $('#elevation-gain').html((totalUp).toFixed(0) + 'm');
+  $('#elevation-loss').html((totalDown * -1).toFixed(0) + 'm');
+  $('#distance').html( (totalAbsoluteDistance/1000).toFixed(2) + 'km');
+  $('#map-distance').html( (totalDistance/1000).toFixed(2) + 'km');
+  $('#starting-elevation').html(startingElevation.toFixed(2) + 'm');
+  $('#finishing-elevation').html(finishingElevation.toFixed(2) + 'm');
 }
 
 function displayCoordinates(point) {
@@ -355,7 +355,7 @@ function plotPoints(theLatLng) {
     let vector = google.maps.geometry.spherical.computeDistanceBetween(last_element, theLatLng);
     let segmentheading = this.google.maps.geometry.spherical.computeHeading(last_element, theLatLng);
 
-    lineardistance.push(vector);
+    linearDistance.push(vector);
   }
   path.push(theLatLng);
 
@@ -396,12 +396,12 @@ function plottingComplete() {
     window.samples = $('#user-form > input[name="samples"]').val();
     if (units == "imperial") {
       window.weight = ($('#user-form > input[name="weight"]').val())/2.20462;
-      window.pweight = ($('#user-form > input[name="pack-weight"]').val())/2.20462;
+      window.pWeight = ($('#user-form > input[name="pack-weight"]').val())/2.20462;
     } else {
       window.weight = $('#user-form > input[name="weight"]').val();
-      window.pweight = $('#user-form > input[name="pack-weight"]').val();
+      window.pWeight = $('#user-form > input[name="pack-weight"]').val();
     }
-    window.totaldistance = lineardistance.reduce(function(a, b) { return a + b; }, 0);
+    window.totalDistance = linearDistance.reduce(function(a, b) { return a + b; }, 0);
     let pathOptions = {
       path: path,
       strokeColor: '#0000CC',
@@ -422,8 +422,8 @@ function plottingComplete() {
 
 function plotElevation(results, status) {
   let energy = 0;
-  let adjacent = (totaldistance/(samples - 1));
-  let totalweight = (pweight + weight);
+  let adjacent = (totalDistance/(samples - 1));
+  let totalWeight = (pWeight + weight);
     if (status == google.maps.ElevationStatus.OK) {
       elevations = results;
       let data = new google.visualization.DataTable();
@@ -435,7 +435,7 @@ function plotElevation(results, status) {
         }
 
         for (let i = 0; i < elevations.length - 1; i++) {
-          absolutedistance.push(((adjacent**2)+((elevations[i+1].elevation - elevations[i].elevation)**2))**0.5);
+          absoluteDistance.push(((adjacent**2)+((elevations[i+1].elevation - elevations[i].elevation)**2))**0.5);
           if (elevations[i+1].elevation - elevations[i].elevation >= 0) {
             up.push(elevations[i+1].elevation - elevations[i].elevation);
           } else {
@@ -443,31 +443,31 @@ function plotElevation(results, status) {
           }
         }
 
-      window.startingelevation = elevations[0].elevation;
-      window.finishingelevation = elevations[samples - 1].elevation;
-      window.totalabsolutedistance = absolutedistance.reduce(function(a, b) { return a + b; }, 0);
-      let pace = (totalabsolutedistance / 2000).toFixed(1);
-      window.totalup = up.reduce(function(a, b) { return a + b; }, 0);
-      window.totaldown = down.reduce(function(a, b) { return a + b; }, 0);
-      let averagegrade = ((finishingelevation - startingelevation)/totaldistance)*100;
+      window.startingElevation = elevations[0].elevation;
+      window.finishingElevation = elevations[samples - 1].elevation;
+      window.totalAbsoluteDistance = absoluteDistance.reduce(function(a, b) { return a + b; }, 0);
+      let pace = (totalAbsoluteDistance / 2000).toFixed(1);
+      window.totalUp = up.reduce(function(a, b) { return a + b; }, 0);
+      window.totalDown = down.reduce(function(a, b) { return a + b; }, 0);
+      let averageGrade = ((finishingElevation - startingElevation)/totalDistance)*100;
 
     if (units == "imperial"){
-      $('#elevation-gain').append((totalup*3.28084).toFixed(0) + 'ft');
-      $('#elevation-loss').append((totaldown * -3.28084).toFixed(0) + 'ft');
-      $('#distance').append( (totalabsolutedistance/1000*0.62137121212121).toFixed(2) + 'mi');
-      $('#map-distance').append( (totaldistance/1000*0.62137121212121).toFixed(2) + 'mi');
-      $('#starting-elevation').append((startingelevation*3.28084).toFixed(2) + 'ft');
-      $('#finishing-elevation').append((finishingelevation*3.28084).toFixed(2) + 'ft');
+      $('#elevation-gain').append((totalUp*3.28084).toFixed(0) + 'ft');
+      $('#elevation-loss').append((totalDown * -3.28084).toFixed(0) + 'ft');
+      $('#distance').append( (totalAbsoluteDistance/1000*0.62137121212121).toFixed(2) + 'mi');
+      $('#map-distance').append( (totalDistance/1000*0.62137121212121).toFixed(2) + 'mi');
+      $('#starting-elevation').append((startingElevation*3.28084).toFixed(2) + 'ft');
+      $('#finishing-elevation').append((finishingElevation*3.28084).toFixed(2) + 'ft');
     } else {
-      $('#elevation-gain').append((totalup).toFixed(0) + 'm');
-      $('#elevation-loss').append((totaldown * -1).toFixed(0) + 'm');
-      $('#distance').append( (totalabsolutedistance/1000).toFixed(2) + 'km');
-      $('#map-distance').append( (totaldistance/1000).toFixed(2) + 'km');
-      $('#starting-elevation').append(startingelevation.toFixed(2) + 'm');
-      $('#finishing-elevation').append(finishingelevation.toFixed(2) + 'm');
+      $('#elevation-gain').append((totalUp).toFixed(0) + 'm');
+      $('#elevation-loss').append((totalDown * -1).toFixed(0) + 'm');
+      $('#distance').append( (totalAbsoluteDistance/1000).toFixed(2) + 'km');
+      $('#map-distance').append( (totalDistance/1000).toFixed(2) + 'km');
+      $('#starting-elevation').append(startingElevation.toFixed(2) + 'm');
+      $('#finishing-elevation').append(finishingElevation.toFixed(2) + 'm');
     }
     $('#completion-time').append('~' + pace + 'hrs');
-    $('#average-grade').append(averagegrade.toFixed(2) + '%');
+    $('#average-grade').append(averageGrade.toFixed(2) + '%');
 
     let chartOptions =  {
       animation: {
@@ -487,38 +487,38 @@ function plotElevation(results, status) {
     let difficulty;
 
     switch(true) {
-      case ( totalup >= 15000 ):
+      case ( totalUp >= 15000 ):
         difficulty = "Extreme Terrain";
         break;
-      case ( totalup >= 5000 && pace > 15 ):
+      case ( totalUp >= 5000 && pace > 15 ):
         difficulty = "Extreme Endurance";
         break;
-      case ( totalup >= 3000 && pace > 8 ):
+      case ( totalUp >= 3000 && pace > 8 ):
         difficulty = "Difficult Hike";
         break;
-      case ( totalup >= 2000 && pace > 6):
+      case ( totalUp >= 2000 && pace > 6):
         difficulty = "Moderate Hike";
         break;
-      case ( totalup > 300 && pace > 1.5):
+      case ( totalUp > 300 && pace > 1.5):
         difficulty = "Moderate Hike";
         break;
-      case ( totalup >= 150 && pace > 1 ):
+      case ( totalUp >= 150 && pace > 1 ):
         difficulty = "Easy Hike";
         break;
-      case ( totalup < 150 && pace > 0.6 ):
+      case ( totalUp < 150 && pace > 0.6 ):
         difficulty = "Quick Hike";
         break;
       default:
         difficulty = "Short Walk";
     }
 
-    energy = (totalweight * -9.81 * totaldown * 0.8 * 0.000239006) + (totalweight * 9.81 * totalup * 0.000239006 * 1.1) + (45 * (totalabsolutedistance/1000)) + (weight * pace);
+    energy = (totalWeight * -9.81 * totalDown * 0.8 * 0.000239006) + (totalWeight * 9.81 * totalUp * 0.000239006 * 1.1) + (45 * (totalAbsoluteDistance/1000)) + (weight * pace);
 
     let efficiency;
-      if (averagegrade >= 0) {
-        efficiency = (totalup * 100 / (totalup + (-1 * totaldown)))
+      if (averageGrade >= 0) {
+        efficiency = (totalUp * 100 / (totalUp + (-1 * totalDown)))
       } else {
-        efficiency = (totaldown * -100 / (totalup + (-1 * totaldown)))
+        efficiency = (totalDown * -100 / (totalUp + (-1 * totalDown)))
       }
 
     $('#path-efficiency').append(efficiency.toFixed(2) + '%')
