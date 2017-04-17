@@ -1,8 +1,9 @@
 
-  let elSvc;
+  let elevationService;
   let map;
   let polyline = new Array();
   let chart;
+  let dummyChart;
   let markers = new Array();
   let path = new Array();
   let linearDistance = new Array();
@@ -52,7 +53,7 @@ function initMap (location) {
   });
 
   google.maps.event.addListener(map, 'mousemove', function (event) {
-    displayCoordinates(event.latLng);
+    hudDisplay(event.latLng);
   });
 
     //
@@ -68,10 +69,10 @@ function initMap (location) {
     //           map: map
     // });
 
-
+  dummyChart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
   chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
 
-  elSvc = new google.maps.ElevationService();
+  elevationService = new google.maps.ElevationService();
   let input = document.getElementById('pac-input');
   let searchBox = new google.maps.places.SearchBox(input);
 
@@ -81,7 +82,6 @@ function initMap (location) {
 
     places.forEach(function(place) {
       if (!place.geometry) {
-        console.log("Returned place contains no geometry");
         return;
       }
 
@@ -104,87 +104,11 @@ function initMap (location) {
       $("#pac-input").val('');
   });
 
-  center_map(map);
-
-  google.setOnLoadCallback(drawChart);
-
-  let data = google.visualization.arrayToDataTable([
-    ['Task', 'Hours per Day'],
-    ['1', 11],
-    ['2', 2],
-    ['3', 2],
-    ['4', 3],
-    ['5', 7],
-    ['6', 20],
-    ['7', 17],
-    ['8', 11],
-    ['9', 2],
-    ['10', 9]
-  ]);
-
-  let chart1 = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
-
-  let options1 = {
-    backgroundColor: "#475965",
-    colors: ['#a0b1bc', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
-    vAxis: {
-    textStyle:{color:'#FFF'}},
-    width: 1316,
-    height: 152,
-    legend: 'none',
-    bar: {groupWidth: '100%'},
-    hAxis: { textPosition: 'none' },
-    animation:{
-      'duration': 5000,
-      'easing': 'out',
-    },
-    vAxis: {minValue:0, maxValue:50}
-  };
-
-  setInterval(change, 3000);
-
-  function drawChart() {
-        chart.draw(data, options1);
-  }
-
-  let ch=0;
-    function change(){
-      if (ch == 0) {
-        data = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['1', 9],
-          ['2', 20],
-          ['3', 15],
-          ['4', 20],
-          ['5', 17],
-          ['6', 10],
-          ['7', 2],
-          ['8', 14],
-          ['9', 24],
-          ['10', 40]
-        ]);
-        ch=1;
-      } else if (ch == 1) {
-          data = google.visualization.arrayToDataTable([
-            ['Task', 'Hours per Day'],
-            ['1', 10],
-            ['2', 2],
-            ['3', 12],
-            ['4', 24],
-            ['5', 41],
-            ['6', 6],
-            ['7', 40],
-            ['8', 20],
-            ['9', 2],
-            ['10', 17]
-          ]);
-          ch=0;
-      }
-      chart1.draw(data, options1);
-  }
+  centerMap(map);
+  initDummyChart();
 }
 
-function center_map(map) {
+function centerMap(map) {
   let center = map.getCenter();
   document.getElementById("map-canvas").style.width = '100%';
   google.maps.event.trigger(map, 'resize');
@@ -252,7 +176,7 @@ function toMetric() {
   $('#finishing-elevation').html(finishingElevation.toFixed(2) + 'm');
 }
 
-function displayCoordinates(point) {
+function hudDisplay(point) {
 
   let coordsLabel = document.getElementById("tdCursor");
   let lat = point.lat();
@@ -261,7 +185,7 @@ function displayCoordinates(point) {
   lng = lng.toFixed(6);
   $('#instant-long').html(lng);
   $('#instant-lat').html(lat);
-  let locations = [];
+  let locations = new Array();
   let location = new google.maps.LatLng(lat, lng);
   locations.push(location);
   let positionRequest = { 'locations': locations }
@@ -269,55 +193,55 @@ function displayCoordinates(point) {
   elevator.getElevationForLocations(positionRequest, function (results, status) {
     if (status == google.maps.ElevationStatus.OK) {
       if (path.length >= 1) {
-        let last_element = path[path.length - 1]
-        let vector = google.maps.geometry.spherical.computeDistanceBetween(last_element, point);
-        let segmentheading = this.google.maps.geometry.spherical.computeHeading(last_element, point);
+        let lastElement = path[path.length - 1]
+        let vector = google.maps.geometry.spherical.computeDistanceBetween(lastElement, point);
+        let segmentHeading = this.google.maps.geometry.spherical.computeHeading(lastElement, point);
         let heading1;
         let heading2;
 
         switch(true) {
-          case ( segmentheading >= -180 && segmentheading < -135 ):
-            segmentheading = (segmentheading + 180).toFixed(2);
+          case ( segmentHeading >= -180 && segmentHeading < -135 ):
+            segmentHeading = (segmentHeading + 180).toFixed(2);
             heading1="W";
             heading2="S";
             break;
-          case ( segmentheading >= -135 && segmentheading < -90 ):
-            segmentheading = ((-1 * segmentheading) - 90).toFixed(2);
+          case ( segmentHeading >= -135 && segmentHeading < -90 ):
+            segmentHeading = ((-1 * segmentHeading) - 90).toFixed(2);
             heading1="S";
             heading2="W";
             break;
-          case ( segmentheading >= -90 && segmentheading < -45 ):
-            segmentheading = (segmentheading + 90).toFixed(2);
+          case ( segmentHeading >= -90 && segmentHeading < -45 ):
+            segmentHeading = (segmentHeading + 90).toFixed(2);
             heading1="N";
             heading2="W";
             break;
-          case ( segmentheading >= -45 && segmentheading < 0 ):
-            segmentheading = (-1 * segmentheading).toFixed(2);
+          case ( segmentHeading >= -45 && segmentHeading < 0 ):
+            segmentHeading = (-1 * segmentHeading).toFixed(2);
             heading1="W";
             heading2="N";
             break;
-          case ( segmentheading >= 0 && segmentheading < 45 ):
-            segmentheading = (segmentheading).toFixed(2);
+          case ( segmentHeading >= 0 && segmentHeading < 45 ):
+            segmentHeading = (segmentHeading).toFixed(2);
             heading1="E";
             heading2="N";
             break;
-          case ( segmentheading >= 45 && segmentheading < 90 ):
-            segmentheading = (90 - segmentheading).toFixed(2);
+          case ( segmentHeading >= 45 && segmentHeading < 90 ):
+            segmentHeading = (90 - segmentHeading).toFixed(2);
             heading1="N";
             heading2="E";
             break;
-          case ( segmentheading >= 90 && segmentheading < 135 ):
-            segmentheading = (segmentheading - 90).toFixed(2);
+          case ( segmentHeading >= 90 && segmentHeading < 135 ):
+            segmentHeading = (segmentHeading - 90).toFixed(2);
             heading1="S";
             heading2="E";
             break;
-          case ( segmentheading >= 135 && segmentheading < 180 ):
-            segmentheading = (180 - segmentheading).toFixed(2);
+          case ( segmentHeading >= 135 && segmentHeading < 180 ):
+            segmentHeading = (180 - segmentHeading).toFixed(2);
             heading1="E";
             heading2="S";
             break;
           default:
-            segmentheading = "Error";
+            segmentHeading = "Error";
         }
 
         if (units == "metric") {
@@ -332,7 +256,7 @@ function displayCoordinates(point) {
             $('#vector').html((vector*0.000621371).toFixed(2) + 'mi ');
         }
 
-      $('#heading-degrees').html(segmentheading);
+      $('#heading-degrees').html(segmentHeading);
       $('#heading1').html(heading1);
       $('#heading2').html(heading2);
 
@@ -351,9 +275,9 @@ function displayCoordinates(point) {
 function plotPoints(theLatLng) {
   generated = false;
   if (path.length >= 1) {
-    let last_element = path[path.length - 1]
-    let vector = google.maps.geometry.spherical.computeDistanceBetween(last_element, theLatLng);
-    let segmentheading = this.google.maps.geometry.spherical.computeHeading(last_element, theLatLng);
+    let lastElement = path[path.length - 1]
+    let vector = google.maps.geometry.spherical.computeDistanceBetween(lastElement, theLatLng);
+    let segmentHeading = this.google.maps.geometry.spherical.computeHeading(lastElement, theLatLng);
 
     linearDistance.push(vector);
   }
@@ -385,9 +309,9 @@ function plottingComplete() {
     generated = true;
     $('#difficulty').html('&nbsp;');
     $('.results').html("&nbsp;");
-    let last_marker = path[path.length - 1]
+    let lastMarker = path[path.length - 1]
     markers.push(new google.maps.Marker({
-      position: last_marker,
+      position: lastMarker,
       map: map
     }));
 
@@ -416,7 +340,7 @@ function plottingComplete() {
       'samples': parseInt(samples)
     }
 
-    elSvc.getElevationAlongPath(pathRequest, plotElevation);
+    elevationService.getElevationAlongPath(pathRequest, plotElevation);
   }
 }
 
@@ -474,9 +398,8 @@ function plotElevation(results, status) {
         startup: true
       },
       backgroundColor: "#475965",
-      colors: ['#a0b1bc', '#e6693e', '#ec8f6e', '#f3b49f', '#f6c7b6'],
-      width: 1375,
-      height: 152,
+      colors: ['#a0b1bc'],
+      chartArea:{left:"5%",top:"5%",width:"90%",height:"90%"},
       legend: 'none',
       vAxis: {
         textStyle:{color: ['#FFF']}
@@ -524,6 +447,92 @@ function plotElevation(results, status) {
     $('#path-efficiency').append(efficiency.toFixed(2) + '%')
     $('#calories').append(energy.toFixed(0));
     $('#difficulty').append(difficulty);
+  }
+
+}
+
+function initDummyChart () {
+
+  google.setOnLoadCallback(drawDummyChart);
+
+  let dummyData = google.visualization.arrayToDataTable([
+    ['Task', 'Hours per Day'],
+    ['1', 11],
+    ['2', 2],
+    ['3', 2],
+    ['4', 3],
+    ['5', 7],
+    ['6', 20],
+    ['7', 17],
+    ['8', 11],
+    ['9', 2],
+    ['10', 9]
+  ]);
+
+  let dummyOptions = {
+    animation:{
+      'duration': 2500,
+      'easing': 'out',
+    },
+    backgroundColor: "#475965",
+    colors: ['#a0b1bc'],
+    chartArea:{left:"5%",bottom:"10%",width:"90%",height:"50%"},
+    legend: 'none',
+    vAxis: {
+      textStyle:{color: ['#FFF']},
+      minValue: 0,
+      maxValue: 50,
+      textPosition: 'none'
+    },
+    title: 'Waiting to generate your path...',
+    titleTextStyle: {
+        color: '#FFF',
+        fontName: ['Roboto', 'sans-serif']
+    },
+    bar: {groupWidth: '100%'},
+    hAxis: { textPosition: 'none' },
+  };
+
+  setInterval(change, 3000);
+
+  function drawDummyChart() {
+        dummyChart.draw(dummyData, dummyOptions);
+  }
+
+  let ch=0;
+    function change(){
+      if (ch == 0) {
+        dummyData = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['1', 9],
+          ['2', 20],
+          ['3', 15],
+          ['4', 20],
+          ['5', 17],
+          ['6', 10],
+          ['7', 2],
+          ['8', 14],
+          ['9', 24],
+          ['10', 40]
+        ]);
+        ch=1;
+      } else if (ch == 1) {
+          dummyData = google.visualization.arrayToDataTable([
+            ['Task', 'Hours per Day'],
+            ['1', 18],
+            ['2', 2],
+            ['3', 12],
+            ['4', 24],
+            ['5', 41],
+            ['6', 22],
+            ['7', 40],
+            ['8', 20],
+            ['9', 2],
+            ['10', 17]
+          ]);
+          ch=0;
+      }
+      dummyChart.draw(dummyData, dummyOptions);
   }
 
 }
