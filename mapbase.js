@@ -1,4 +1,3 @@
-
   let elevationService;
   let map;
   let polyline = new Array();
@@ -13,7 +12,7 @@
   let elevator;
   let poly;
   let units = "metric";
-  let generated = true;
+  let generated = false;
 
   google.load('visualization', '1', {packages: ['corechart']});
 
@@ -118,22 +117,47 @@ function centerMap(map) {
 function reset() {
   generated = true;
   for (let i = 0; i < markers.length; i++) {
-    markers[i].setMap(null)
+    markers[i].setMap(null);
   }
   for (let i = 0; i < polyline.length; i++) {
-    polyline[i].setMap(null)
+    polyline[i].setMap(null);
   }
   absoluteDistance = new Array();
   markers = new Array();
   path = new Array();
-  polyline = new Array ();
-  linearDistance = new Array ();
+  polyline = new Array();
+  linearDistance = new Array();
   down = new Array();
   up = new Array();
   $('.results').html("&nbsp;");
   $('#difficulty').html('&nbsp;');
   $('#vector').html('&nbsp;');
     // map.getCenter(initMap);
+}
+
+function undo() {
+  if (path.length < 2) {
+    reset();
+  } else if (generated == true && markers.length == 2) {
+    generated = false;
+    let lastMarker = markers.length - 1;
+    let lastPolyline = polyline.length - 1;
+    markers[lastMarker].setMap(null);
+    polyline[lastPolyline].setMap(null);
+    polyline.pop()
+    markers.pop();
+  } else {
+    let lastPolyline = polyline.length - 1;
+    polyline[lastPolyline].setMap(null);
+    polyline.pop();
+    path.pop();
+    console.log(polyline);
+    absoluteDistance.pop();
+    linearDistance.pop();
+    down.pop();
+    up.pop();
+  }
+
 }
 
 //Rubberband Polyline function, not ready
@@ -275,7 +299,7 @@ function hudDisplay(point) {
 function plotPoints(theLatLng) {
   generated = false;
   if (path.length >= 1) {
-    let lastElement = path[path.length - 1]
+    let lastElement = path[path.length - 1];
     let vector = google.maps.geometry.spherical.computeDistanceBetween(lastElement, theLatLng);
     let segmentHeading = this.google.maps.geometry.spherical.computeHeading(lastElement, theLatLng);
 
@@ -309,13 +333,12 @@ function plottingComplete() {
     generated = true;
     $('#difficulty').html('&nbsp;');
     $('.results').html("&nbsp;");
+
     let lastMarker = path[path.length - 1]
     markers.push(new google.maps.Marker({
       position: lastMarker,
       map: map
     }));
-
-    window.totalMarkers = markers.length
 
     window.samples = $('#user-form > input[name="samples"]').val();
     if (units == "imperial") {
@@ -326,6 +349,7 @@ function plottingComplete() {
       window.pWeight = $('#user-form > input[name="pack-weight"]').val();
     }
     window.totalDistance = linearDistance.reduce(function(a, b) { return a + b; }, 0);
+
     let pathOptions = {
       path: path,
       strokeColor: '#0000CC',
@@ -355,7 +379,11 @@ function plotElevation(results, status) {
       data.addColumn('number', 'Elevation');
 
         for (let i = 0; i < results.length; i++) {
-          data.addRow(['', elevations[i].elevation]);
+          // console.log(elevations[i].location.lat(["[[Scopes]]"]["0"].a));
+          // console.log(elevations[i].location.lng(["[[Scopes]]"]["0"].a));
+          hoverLat = (elevations[i].location.lat(["[[Scopes]]"]["0"].a)).toString();
+          hoverLng = (elevations[i].location.lng(["[[Scopes]]"]["0"].a)).toString();
+          data.addRow(["Location: " + hoverLat + " " + hoverLng, elevations[i].elevation]);
         }
 
         for (let i = 0; i < elevations.length - 1; i++) {
