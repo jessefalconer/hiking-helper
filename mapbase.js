@@ -26,11 +26,15 @@ function initMap (location) {
           if (generated != false) {
             toImperial();
           }
+        $("#weight").attr("placeholder", "lb");
+        $("#pack-weight").attr("placeholder", "lb");
       } else {
         units = "metric";
           if (generated != false) {
             toMetric();
           }
+        $("#weight").attr("placeholder", "kg");
+        $("#pack-weight").attr("placeholder", "kg");
       }
     });
 
@@ -103,16 +107,16 @@ function initMap (location) {
       $("#pac-input").val('');
   });
 
-  centerMap(map);
+  // centerMap(map);
   initDummyChart();
 }
 
-function centerMap(map) {
-  let center = map.getCenter();
-  document.getElementById("map-canvas").style.width = '100%';
-  google.maps.event.trigger(map, 'resize');
-  map.setCenter(center);
-}
+// function centerMap(map) {
+//   let center = map.getCenter();
+//   document.getElementById("map-canvas").style.width = '100%';
+//   google.maps.event.trigger(map, 'resize');
+//   map.setCenter(center);
+// }
 
 function reset() {
   generated = true;
@@ -463,7 +467,7 @@ function plotElevation(results, status) {
         difficulty = "Short Walk";
     }
 
-    energy = (totalWeight * -9.81 * totalDown * 0.8 * 0.000239006) + (totalWeight * 9.81 * totalUp * 0.000239006 * 1.1) + (45 * (totalAbsoluteDistance/1000)) + (weight * pace);
+    energy = (totalWeight * -9.81 * totalDown * 0.000239006 / 0.3) + (totalWeight * 9.81 * totalUp * 0.000239006 / 0.2) + (45 * (totalAbsoluteDistance/1000)) + (weight * pace);
 
     let efficiency;
       if (averageGrade >= 0) {
@@ -598,6 +602,7 @@ $(document).ready(function(){
     if (isOpen == true) {
       $('.searchbox-icon').css('display','block');
       submitIcon.click();
+      submitIcon.enter();
     }
   });
 });
