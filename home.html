@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Google Maps</title>
+    <title>Hiking Helper</title>
     <!-- <meta name="viewport" content="initial-scale=1.0, user-scalable=no"> -->
     <meta charset="utf-8">
     <style>
@@ -46,7 +46,7 @@
         text-align: left;
         line-height: 5vh;
         font-size: 3vh;
-        padding-left: 35px;
+        /*padding-left: 35px;*/
         background: -webkit-linear-gradient(left, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Safari 5.1 to 6.0 */
         background: -o-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Opera 11.1 to 12.0 */
         background: -moz-linear-gradient(right, rgba(56, 66, 75, 1), rgba(56, 66, 75, 0.9)); /* For Firefox 3.6 to 15 */
@@ -230,25 +230,36 @@
       #reset {
         margin-top: 10px;
         margin-bottom: 10px;
-        left: 25%;
         position: relative;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
         border: none;
-        width: 50%;
+        width: 45%;
         text-align: center;
+        float: left;
+      }
+      #undo {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        position: relative;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        border: none;
+        width: 45%;
+        text-align: center;
+        float: right;
       }
       #generate {
         margin-top: 10px;
         margin-bottom: 10px;
-        left: 25%;
         position: relative;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
         border: none;
-        width: 50%;
+        width: 100%;
         text-align: center;
 
         }
@@ -528,7 +539,7 @@
   <div class="container-fluid">
 
     <div class="row">
-      <div class="col-md-12 col-sm-12" id="data">Hiking Sandbox</div>
+      <div class="col-md-12 col-sm-12" id="data">Viewing desktop version 1.0.0</div>
     </div>
 
     <div class="row">
@@ -536,6 +547,7 @@
         <div class="input-container">
 
           <input id="reset" onclick="reset();" type="button" value="Reset" class="waves-effect waves-light btn"/>
+          <input id="undo" onclick="undo();" type="button" value="Undo" class="waves-effect waves-light btn"/>
 
       <div class="row">
         <form class="switch-form">
