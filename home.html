@@ -333,6 +333,7 @@
   #pac-input {
     display: none;
     background-color:  #5F97F6;
+    border-radius: 0 0 2px 2px;
     font-size: 15px;
     font-weight: 300;
     margin-left: 12px;
@@ -340,6 +341,10 @@
     width: 300px;
     border-style: none;
     padding: 15px;
+    color: #F8FFFE;
+  }
+  #pac-input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: black;
   }
   #target {
     width: 345px;
@@ -416,7 +421,7 @@
 
     <div class="row">
       <div class="col-md-12 col-sm-12" id="header">Viewing desktop version 1.0.0
-        <input id="pac-input" class="controls" type="text" placeholder="Teleport">
+        <input id="pac-input" class="controls" type="text" placeholder="Find another location...">
       </div>
     </div>
 

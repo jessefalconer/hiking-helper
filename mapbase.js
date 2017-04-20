@@ -102,13 +102,13 @@ function initMap (location) {
 
       if (place.geometry.viewport) {
         bounds.union(place.geometry.viewport);
-          } else {
-              bounds.extend(place.geometry.location);
-            }
-        });
+      } else {
+        bounds.extend(place.geometry.location);
+      }
+    });
 
-      map.fitBounds(bounds);
-      $("#pac-input").val('');
+    map.fitBounds(bounds);
+    $("#pac-input").val('');
   });
 
   // centerMap(map);
