@@ -13,6 +13,7 @@
   let poly;
   let units = "metric";
   let generated = false;
+  let geolocated = false;
 
   google.load('visualization', '1', {packages: ['corechart']});
 
@@ -78,7 +79,7 @@ function initMap (location) {
   elevationService = new google.maps.ElevationService();
   let input = document.getElementById('pac-input');
   let searchBox = new google.maps.places.SearchBox(input);
-
+  map.controls[google.maps.ControlPosition.TOP].push(input);
   google.maps.event.addListener(searchBox, 'places_changed', function() {
     let places = searchBox.getPlaces();
     let bounds = new google.maps.LatLngBounds();
@@ -109,6 +110,8 @@ function initMap (location) {
 
   // centerMap(map);
   initDummyChart();
+  $("#pac-input").show();
+  $(".loader-container").hide();
 }
 
 // function centerMap(map) {
@@ -570,50 +573,17 @@ function initDummyChart () {
 }
 
 $(document).ready(function (){
-  navigator.geolocation.getCurrentPosition(initMap);
+  navigator.geolocation.getCurrentPosition(initMap,
+    function (error) {
+      if (error.code == error.PERMISSION_DENIED) {
+        $(".loader-1").css("display", "none");
+        $(".loader-1-hidden").fadeIn("slow", function(){
+          $(".loader-1-hidden").css("display", "block");
+          $(".loader-text-1").html("&nbsp; Location request denied");
+        })
+        $("#map-canvas").append("<div class='loader-container'><div class='loader'></div><div class='loader-text'> &nbsp; Rerouting to Vancouver, BC...</div></div>");
+        initMap()
+      }
+});
   document.getElementById("samples").defaultValue = "300";
 });
-
-$(document).ready(function(){
-
-  let submitIcon = $('.searchbox-icon');
-  let inputBox = $('.searchbox-input');
-  let searchBox = $('.searchbox');
-  let isOpen = false;
-  submitIcon.click(function(){
-    if (isOpen == false) {
-      searchBox.addClass('searchbox-open');
-      inputBox.focus();
-      isOpen = true;
-    } else {
-      searchBox.removeClass('searchbox-open');
-      inputBox.focusout();
-      isOpen = false;
-    }
-  });
-  submitIcon.mouseup(function(){
-    return false;
-  });
-  searchBox.mouseup(function(){
-    return false;
-  });
-
-  $(document).mouseup(function(){
-    if (isOpen == true) {
-      $('.searchbox-icon').css('display','block');
-      submitIcon.click();
-      submitIcon.enter();
-    }
-  });
-});
-
-function buttonUp(){
-  let inputVal = $('.searchbox-input').val();
-    inputVal = $.trim(inputVal).length;
-      if (inputVal !== 0){
-        $('.searchbox-icon').css('display','none');
-      } else {
-        $('.searchbox-input').val('');
-        $('.searchbox-icon').css('display','block');
-      }
-}
