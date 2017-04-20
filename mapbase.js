@@ -161,7 +161,6 @@ function undo() {
     polyline[lastPolyline].setMap(null);
     polyline.pop();
     path.pop();
-    console.log(polyline);
     absoluteDistance.pop();
     linearDistance.pop();
     down.pop();
@@ -588,7 +587,7 @@ $(document).ready(function (){
         });
         $("#map-canvas").append("<div class='loader-container'><div class='loader'></div><div class='loader-text'> &nbsp; Defaulting to Vancouver, BC...</div></div>");
         geolocated = false;
-        setTimeout(initMap, 3000);
+        setTimeout(initMap, 3500);
       }
     });
   document.getElementById("samples").defaultValue = "300";
