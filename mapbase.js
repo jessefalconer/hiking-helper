@@ -1,22 +1,21 @@
-  let elevationService;
-  let map;
-  let polyline = new Array();
-  let chart;
-  let dummyChart;
-  let markers = new Array();
-  let path = new Array();
-  let linearDistance = new Array();
-  let absoluteDistance = new Array();
-  let down = new Array();
-  let up = new Array();
-  let elevator;
-  let poly;
-  let units = "metric";
-  let generated = false;
-  let geolocated = false;
+let elevationService;
+let map;
+let polyline = new Array();
+let chart;
+let dummyChart;
+let markers = new Array();
+let path = new Array();
+let linearDistance = new Array();
+let absoluteDistance = new Array();
+let down = new Array();
+let up = new Array();
+let elevator;
+let poly;
+let units = "metric";
+let generated = false;
+let geolocated = true;
 
-  google.load('visualization', '1', {packages: ['corechart']});
-
+google.load('visualization', '1', {packages: ['corechart']});
 
 function initMap (location) {
 
@@ -39,7 +38,11 @@ function initMap (location) {
       }
     });
 
-  let currentLocation = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+  if (geolocated == true) {
+    currentLocation = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+  } else {
+    currentLocation = {lat: 49.24966, lng: -123.11934};
+  }
 
   elevator = new google.maps.ElevationService();
 
@@ -579,11 +582,14 @@ $(document).ready(function (){
         $(".loader-1").css("display", "none");
         $(".loader-1-hidden").fadeIn("slow", function(){
           $(".loader-1-hidden").css("display", "block");
-          $(".loader-text-1").html("&nbsp; Location request denied");
-        })
-        $("#map-canvas").append("<div class='loader-container'><div class='loader'></div><div class='loader-text'> &nbsp; Rerouting to Vancouver, BC...</div></div>");
-        initMap()
+        });
+        $(".loader-text-1").fadeIn("slow", function(){
+          $(".loader-text-1").html("&nbsp; Location request blocked");
+        });
+        $("#map-canvas").append("<div class='loader-container'><div class='loader'></div><div class='loader-text'> &nbsp; Defaulting to Vancouver, BC...</div></div>");
+        geolocated = false;
+        setTimeout(initMap, 3000);
       }
-});
+    });
   document.getElementById("samples").defaultValue = "300";
 });
