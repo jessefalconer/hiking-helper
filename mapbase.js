@@ -10,10 +10,13 @@ let absoluteDistance = new Array();
 let down = new Array();
 let up = new Array();
 let elevator;
-let poly;
+let rubberPolyline;
+let rubberPolylines = new Array();
 let units = "metric";
 let generated = false;
 let geolocated = true;
+// let radius;
+// let radii = new Array();
 
 google.load('visualization', '1', {packages: ['corechart']});
 
@@ -62,19 +65,6 @@ function initMap (location) {
   google.maps.event.addListener(map, 'mousemove', function (event) {
     hudDisplay(event.latLng);
   });
-
-    //
-
-    //Rubberband polyline feature, not ready
-    // google.maps.event.addListener(map, 'mousemove', function (event) {
-    //                 rubberPoly(event.latLng);
-    // });
-    // poly = new google.maps.Polyline({
-    //           strokeColor: '#FF0000',
-    //           strokeOpacity: 1.0,
-    //           strokeWeight: 3,
-    //           map: map
-    // });
 
   dummyChart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
   chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
@@ -132,6 +122,8 @@ function reset() {
   for (let i = 0; i < polyline.length; i++) {
     polyline[i].setMap(null);
   }
+  rubberPolylines[0].setMap(null);
+  rubberPolylines = new Array();
   absoluteDistance = new Array();
   markers = new Array();
   path = new Array();
@@ -146,6 +138,7 @@ function reset() {
 }
 
 function undo() {
+
   if (path.length < 2) {
     reset();
   } else if (generated == true && markers.length == 2) {
@@ -168,16 +161,6 @@ function undo() {
   }
 
 }
-
-//Rubberband Polyline function, not ready
-  // function rubberPoly(pnt) {
-  //
-  //   if (path.length >= 1){
-  //   newpoly = [pnt, path[path.length - 1]]
-  //   poly.setPath(newpoly);
-  //   }
-  //
-  // }
 
 function toImperial() {
   $('#elevation-gain').html("&nbsp;");
@@ -209,6 +192,18 @@ function toMetric() {
   $('#finishing-elevation').html(finishingElevation.toFixed(2) + 'm');
 }
 
+// function removeRadius() {
+//     radii[0].setMap(null);
+//     radii.shift();
+// }
+
+function removeRubberPolyline() {
+  if (rubberPolylines.length > 1) {
+    rubberPolylines[0].setMap(null);
+    rubberPolylines.shift();
+  }
+}
+
 function hudDisplay(point) {
 
   let coordsLabel = document.getElementById("tdCursor");
@@ -227,10 +222,43 @@ function hudDisplay(point) {
     if (status == google.maps.ElevationStatus.OK) {
       if (path.length >= 1) {
         let lastElement = path[path.length - 1]
+        let lastLat = lastElement.lat();
+        let lastLng = lastElement.lng();
         let vector = google.maps.geometry.spherical.computeDistanceBetween(lastElement, point);
         let segmentHeading = this.google.maps.geometry.spherical.computeHeading(lastElement, point);
         let heading1;
         let heading2;
+
+        // Radius feature
+        // let radiusOptions = {
+        //     strokeColor: '#FF0000',
+        //     strokeOpacity: 0.8,
+        //     strokeWeight: 2,
+        //     fillColor: '#FF0000',
+        //     fillOpacity: 0,
+        //     map: map,
+        //     center: lastElement,
+        //     radius: vector
+        // }
+        // radius = new google.maps.Circle(radiusOptions);
+        // radii.push(radius)
+        // setTimeout(removeRadius, 100);
+
+        let rubberPath = [
+          {lat: lastLat, lng: lastLng},
+          {lat: point.lat(), lng: point.lng()}
+        ];
+        let rubberOptions = {
+          path: rubberPath,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 1,
+          geodesic: true,
+          map: map
+        };
+        rubberPolyline = new google.maps.Polyline(rubberOptions);
+        rubberPolylines.push(rubberPolyline);
+        setTimeout(removeRubberPolyline, 1);
 
         switch(true) {
           case ( segmentHeading >= -180 && segmentHeading < -135 ):
