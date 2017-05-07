@@ -355,6 +355,7 @@ function plotPoints(theLatLng) {
     path: path,
     strokeColor: '#0000CC',
     opacity: 0.4,
+    geodesic: true,
     map: map
   }
 
