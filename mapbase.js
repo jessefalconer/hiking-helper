@@ -198,10 +198,10 @@ function toMetric() {
 // }
 
 function removeRubberPolyline() {
-  if (rubberPolylines.length > 1) {
-    rubberPolylines[0].setMap(null);
-    rubberPolylines.shift();
-  }
+  // if (rubberPolylines.length > 1) {
+  //   rubberPolylines[0].setMap(null);
+  //   rubberPolylines.shift();
+  // }
 }
 
 function hudDisplay(point) {
@@ -256,9 +256,9 @@ function hudDisplay(point) {
           geodesic: true,
           map: map
         };
-        rubberPolyline = new google.maps.Polyline(rubberOptions);
-        rubberPolylines.push(rubberPolyline);
-        setTimeout(removeRubberPolyline, 1);
+        // rubberPolyline = new google.maps.Polyline(rubberOptions);
+        // rubberPolylines.push(rubberPolyline);
+        // setTimeout(removeRubberPolyline, 1);
 
         switch(true) {
           case ( segmentHeading >= -180 && segmentHeading < -135 ):
