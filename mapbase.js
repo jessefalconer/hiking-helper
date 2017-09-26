@@ -600,7 +600,6 @@ function initDummyChart () {
       }
       dummyChart.draw(dummyData, dummyOptions);
   }
-
 }
 
 $(document).ready(function (){
@@ -621,3 +620,15 @@ $(document).ready(function (){
     });
   document.getElementById("samples").defaultValue = "300";
 });
+
+function openNav() {
+    document.getElementById("myNav").style.width = "100%";
+    $(".help").html("&#9432; Close");
+    $(".help").attr("onclick","closeNav()")
+}
+
+function closeNav() {
+    document.getElementById("myNav").style.width = "0%";
+    $(".help").html("&#9432; Help");
+    $(".help").attr("onclick","openNav()")
+}
