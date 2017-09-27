@@ -31,6 +31,7 @@ max-width: 100vw;
 display: flex;
 }
 #header {
+/*overflow: auto;*/
 color: #ffffff;
 background-color: #38424B;
 min-height: 5vh;
@@ -393,7 +394,7 @@ vertical-align: middle;
 }
 
 
-.overlay {
+.help-overlay {
     height: 100%;
     width: 0;
     position: fixed;
@@ -406,14 +407,28 @@ vertical-align: middle;
     transition: 0.5s;
 }
 
-.overlay-content {
+.help-overlay-header {
+    height: 5%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.8);
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.help-overlay-content {
     position: relative;
     top: 15%;
     width: 100%;
     text-align: center;
     margin-top: 30px;
 }
-.p-container {
+
+.help-p-container {
     position: relative;
     top: 25%;
     width: 70%;
@@ -424,16 +439,16 @@ vertical-align: middle;
     border-radius: 10px;
 }
 
-.overlay div {
+.help-overlay div {
     padding: 8px;
     text-decoration: none;
     font-size: 36px;
     color: #818181;
     display: block;
-    transition: 0.3s;
+    transition: 0.15s;
 }
 
-.overlay h2 {
+.help-overlay h2 {
     padding: 8px;
     text-decoration: none;
     font-size: 20px;
@@ -445,16 +460,98 @@ vertical-align: middle;
     margin-left: 10%;
 }
 
-.overlay p {
+.help-overlay p {
     padding: 5px;
     text-decoration: none;
     font-size: 15px;
     color: #818181;
     display: block;
-    transition: 0.3s;
+    transition: 0.15s;
 }
 
-.overlay a {
+.help-overlay div:hover, .help-overlay div:focus {
+    color: #f1f1f1;
+}
+
+.help {
+  z-index: 2;
+  left: 1vw;
+  color: #818181;
+  position: absolute;
+}
+
+.help:hover {
+  color: #f1f1f1;
+}
+
+@media screen and (max-height: 450px) {
+  .help-overlay div {font-size: 20px}
+  .help-overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}
+
+.nerds-overlay {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.9);
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+.nerds-overlay-header {
+    height: 5%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.8);
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.nerds-overlay-content {
+    position: relative;
+    top: 1%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.nerds-overlay h2 {
+    padding-top: 8px;
+    padding-bottom: 1px;
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+    transition: 0.15s;
+    text-align: left;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.nerds-p-container {
+    position: relative;
+    top: 25%;
+    width: 90%;
+    text-align: left;
+    margin-top: 15px;
+    margin-left: 5%;
+    border-style: solid;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+.nerds-overlay div {
     padding: 8px;
     text-decoration: none;
     font-size: 36px;
@@ -463,27 +560,43 @@ vertical-align: middle;
     transition: 0.15s;
 }
 
-.overlay div:hover, .overlay div:focus {
+.nerds-overlay p {
+    padding: 5px;
+    text-decoration: none;
+    font-size: 10px;
+    color: #818181;
+    display: block;
+    transition: 0.15s;
+}
+
+.nerds-overlay div:hover, .nerds-overlay div:focus {
     color: #f1f1f1;
 }
 
-.overlay a:hover, .overlay a:focus {
+.nerds-overlay a {
+    text-decoration: none;
+    font-size: 10px;
+    color: #818181;
+    transition: 0.15s;
+}
+.nerds-overlay a:hover, .nerds-overlay a:focus {
     color: #f1f1f1;
 }
 
-.help {
+.nerds {
   z-index: 2;
-  margin-left: 3.6vw;
+  right: 1vw;
   color: #818181;
+  position: absolute;
 }
 
-.help:hover {
-  color: #f1f1f1;  
+.nerds:hover {
+  color: #f1f1f1;
 }
 
 @media screen and (max-height: 450px) {
-  .overlay div {font-size: 20px}
-  .overlay .closebtn {
+  .nerds-overlay div {font-size: 20px}
+  .nerds-overlay .closebtn {
     font-size: 40px;
     top: 15px;
     right: 35px;

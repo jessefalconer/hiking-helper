@@ -621,14 +621,45 @@ $(document).ready(function (){
   document.getElementById("samples").defaultValue = "300";
 });
 
-function openNav() {
-    document.getElementById("myNav").style.width = "100%";
-    $(".help").html("&#9432; Close");
-    $(".help").attr("onclick","closeNav()")
+function openHelp() {
+  $(".nerds").css("z-index","1");
+  $(".help-overlay-header").css("z-index","3");
+  document.getElementById("helpSlider").style.width = "100%";
+  document.getElementById("helpSliderHeader").style.width = "100%";
+  $(".help").html("&#9432; Close");
+  $(".help").attr("onclick","closeHelp()");
+  $(".help").css("z-index","4");
+  $(".help").css("position","fixed");
 }
 
-function closeNav() {
-    document.getElementById("myNav").style.width = "0%";
-    $(".help").html("&#9432; Help");
-    $(".help").attr("onclick","openNav()")
+function closeHelp() {
+  function timer() {$(".nerds").css("z-index","2");}
+  setTimeout(timer, 500);
+  document.getElementById("helpSlider").style.width = "0%";
+  document.getElementById("helpSliderHeader").style.width = "0%";
+  $(".help").html("&#9432;&nbsp;Help");
+  $(".help").attr("onclick","openHelp()");
+  $(".help").css("position","absolute");
+}
+
+function openNerds() {
+  $(".help").css("z-index","1");
+  $(".nerds-overlay-header").css("z-index","3");
+  document.getElementById("nerdsSlider").style.width = "100%";
+  document.getElementById("nerdsSliderHeader").style.width = "100%";
+  $(".nerds").html("&int; &nbsp;Close");
+  $(".nerds").attr("onclick","closeNerds()");
+  $(".nerds").css("z-index","4");
+  $(".nerds").css("position","fixed");
+}
+
+function closeNerds() {
+  $(".nerds-overlay-header").css("background-color", "rgba(0,0,0, 0.9)");
+  function timer() {$(".help").css("z-index","2");}
+  setTimeout(timer, 500);
+  document.getElementById("nerdsSlider").style.width = "0%";
+  document.getElementById("nerdsSliderHeader").style.width = "0%";
+  $(".nerds").html("&int; &nbsp;Nerds");
+  $(".nerds").attr("onclick","openNerds()");
+  $(".nerds").css("position","absolute");
 }
