@@ -204,6 +204,11 @@ border: none;
 width: 45%;
 text-align: center;
 float: left;
+background-color: #D9A5A5;
+}
+#reset:hover {
+  background-color: #D19393;
+  border-radius: 2px 2px 2px 2px;
 }
 #undo {
 margin-top: 10px;
@@ -216,6 +221,11 @@ border: none;
 width: 45%;
 text-align: center;
 float: right;
+background-color: #D6C48E;
+}
+#undo:hover{
+  background-color: #CFBA7B;
+  border-radius: 2px 2px 2px 2px;
 }
 #generate {
 margin-top: 10px;
@@ -227,6 +237,11 @@ border-radius: 3px;
 border: none;
 width: 100%;
 text-align: center;
+background-color: #8AB2BC;
+}
+#generate:hover{
+  background-color: #7DAAB5;
+  border-radius: 2px 2px 2px 2px;
 }
 #metric {
 vertical-align: middle;
@@ -263,7 +278,7 @@ position: absolute;
 cursor: pointer;
 top: 0em;
 bottom: 0em;
-background-color: #ccc;
+background-color: #8B9EBB;
 -webkit-transition: .4s;
 transition: .4s;
 border-radius: 3px;
@@ -281,8 +296,11 @@ background-color: #ffffff;
 transition: .4s;
 border-radius: 3px;
 }
+input:hover + .slider:before{
+  background-color: #E5E5E5;
+}
 input:checked + .slider {
-background-color: #3268D5;
+background-color: #546C90;
 }
 input:focus + .slider {
 box-shadow: 0 0 1px #3268D5;
@@ -328,7 +346,7 @@ font-weight: 300;
 #pac-input {
 display: none;
 background-color:  #5F97F6;
-border-radius: 0 0 2px 2px;
+border-radius: 0 0 5px 5px;
 font-size: 15px;
 font-weight: 300;
 margin-left: 12px;
@@ -392,7 +410,6 @@ vertical-align: middle;
 0% { transform: rotate(0deg); }
 100% { transform: rotate(360deg); }
 }
-
 
 .help-overlay {
     height: 100%;
@@ -475,6 +492,7 @@ vertical-align: middle;
 
 .help {
   z-index: 2;
+  top: 0vh;
   left: 1vw;
   color: #818181;
   position: absolute;
@@ -585,6 +603,7 @@ vertical-align: middle;
 
 .nerds {
   z-index: 2;
+  top: 0vh;
   right: 1vw;
   color: #818181;
   position: absolute;
