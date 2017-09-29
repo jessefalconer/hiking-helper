@@ -122,8 +122,8 @@ function reset() {
   for (let i = 0; i < polyline.length; i++) {
     polyline[i].setMap(null);
   }
-  rubberPolylines[0].setMap(null);
-  rubberPolylines = new Array();
+  // rubberPolylines[0].setMap(null);
+  // rubberPolylines = new Array();
   absoluteDistance = new Array();
   markers = new Array();
   path = new Array();
@@ -364,9 +364,9 @@ function plotPoints(theLatLng) {
 
 function plottingComplete() {
   if (path.length < 2) {
-    alert("Draw a path first!");
+    alertDrawFirst();
   } else if (generated == true) {
-    alert("No new paths added!");
+    alertNoNewPaths();
   } else {
     generated = true;
     $('#difficulty').html('&nbsp;');
@@ -662,4 +662,24 @@ function closeNerds() {
   $(".nerds").html("&int; &nbsp;Nerds");
   $(".nerds").attr("onclick","openNerds()");
   $(".nerds").css("position","absolute");
+}
+
+function closeAlert() {
+  $(".alert-warning").css("opacity","0");
+  function timer() {$(".alert-warning").css("z-index","-1");}
+  setTimeout(timer, 500);
+}
+
+function alertDrawFirst() {
+  $(".alert-warning").css("opacity","1");
+  $(".alert-warning").css("z-index","5");
+  $(".alert-warning").html('Draw a path first!<span class="close-alert-btn" onclick="closeAlert()">&nbsp;&times;</span>');
+  setTimeout(closeAlert, 7500);
+}
+
+function alertNoNewPaths() {
+  $(".alert-warning").css("opacity","1");
+  $(".alert-warning").css("z-index","5");
+  $(".alert-warning").html('No new paths added!          <span class="close-alert-btn" onclick="closeAlert()">&nbsp;&times;</span>');
+  setTimeout(closeAlert, 7500);
 }

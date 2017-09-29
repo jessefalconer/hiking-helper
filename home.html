@@ -26,6 +26,7 @@
       });
     </script>
 
+
     <script type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
@@ -39,6 +40,12 @@
     <div class="row">
       <div class="col-md-12 col-sm-12" id="header">
         <span class="help" style="cursor:pointer" onclick="openHelp()">&#9432; Help</span>
+
+        <div class="alert-warning">
+          Alert!
+          <span class="close-alert-btn" onclick="closeAlert()">&times;</span>
+        </div>
+
         <span class="nerds" style="cursor:pointer" onclick="openNerds()">&int; &nbsp;Nerds</span>
         <input id="pac-input" class="controls" type="text" placeholder="Find another location...">
       </div>
