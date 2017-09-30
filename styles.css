@@ -626,32 +626,34 @@ vertical-align: middle;
     /*padding: 20px;*/
     background-color: #f44336 !important;
     color: #E8E8E8 !important;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.6s;
     /*margin-bottom: 15px;*/
     top: 0;
     left: 25%;
     position: fixed;
     width: 50%;
-    height: 5vh;
+    min-height: 5vh;
     line-height: 5vh;
-    z-index: -1;
-    font-size: 2.5vh;
+    z-index: 4;
+    font-size: 1.8vh;
     text-align: center;
     border-radius: 3px 3px 3px 3px;
+    /*display: flex;*/
 }
 
 /*.alert-warning {background-color: #ff9800;}*/
 
 .close-alert-btn {
-    /*margin-left: 15px;*/
     color: #E8E8E8;
     font-weight: bold;
-    font-size: 4vh;
+    font-size: 2.5vh;
     line-height: 5vh;
     cursor: pointer;
     transition: 0.3s;
     vertical-align: middle;
+    padding-right: 10px;
+    float: right;
 }
 
 .close-alert-btn:hover {
