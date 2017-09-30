@@ -147,7 +147,7 @@ function undo() {
     let lastPolyline = polyline.length - 1;
     markers[lastMarker].setMap(null);
     polyline[lastPolyline].setMap(null);
-    polyline.pop();
+    polyline.pop()
     markers.pop();
   } else {
     let lastPolyline = polyline.length - 1;
@@ -219,7 +219,6 @@ function hudDisplay(point) {
   let positionRequest = { 'locations': locations }
 
   elevator.getElevationForLocations(positionRequest, function (results, status) {
-    // console.log(status);
     if (status == google.maps.ElevationStatus.OK) {
       if (path.length >= 1) {
         let lastElement = path[path.length - 1]
@@ -410,7 +409,6 @@ function plottingComplete() {
 function plotElevation(results, status) {
   let energy = 0;
   let adjacent = (totalDistance/(samples - 1));
-  console.log("Hello");
   let totalWeight = (pWeight + weight);
     if (status == google.maps.ElevationStatus.OK) {
       elevations = results;
