@@ -219,7 +219,7 @@ function hudDisplay(point) {
   let positionRequest = { 'locations': locations }
 
   elevator.getElevationForLocations(positionRequest, function (results, status) {
-    console.log(status);
+    // console.log(status);
     if (status == google.maps.ElevationStatus.OK) {
       if (path.length >= 1) {
         let lastElement = path[path.length - 1]
