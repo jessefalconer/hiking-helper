@@ -351,6 +351,8 @@ function plotPoints(theLatLng) {
     }));
   }
 
+  console.log(theLatLng);
+
   let pathOptions = {
     path: path,
     strokeColor: '#0000CC',
@@ -422,6 +424,10 @@ function plotElevation(results, status) {
           hoverLat = (elevations[i].location.lat(["[[Scopes]]"]["0"].a)).toString();
           hoverLng = (elevations[i].location.lng(["[[Scopes]]"]["0"].a)).toString();
           data.addRow(["Location: " + hoverLat + " " + hoverLng, elevations[i].elevation]);
+          // new google.maps.Marker({
+          //   position: {lng:elevations[i].location.lng(["[[Scopes]]"]["0"].a), lat:elevations[i].location.lat(["[[Scopes]]"]["0"].a)},
+          //   map: map
+          // });
         }
 
         for (let i = 0; i < elevations.length - 1; i++) {
