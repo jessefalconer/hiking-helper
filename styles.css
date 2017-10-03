@@ -29,6 +29,8 @@ min-width: 100vw;
 max-height: 20vh;
 max-width: 100vw;
 display: flex;
+padding-top: 10px;
+padding-bottom: 10px;
 }
 #header {
 /*overflow: auto;*/
@@ -658,4 +660,14 @@ vertical-align: middle;
 
 .close-alert-btn:hover {
     color: #818181;
+}
+
+.bars {
+  background-color: black;
+  border-radius: 1px 1px 0px 0px;
+  transition: 0.1s;
+}
+.bars:hover{
+  background-color: yellow;
+  /*transition: 0.1s;*/
 }

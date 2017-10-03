@@ -1,8 +1,8 @@
 let elevationService;
 let map;
 let polyline = new Array();
-let chart;
-let dummyChart;
+// let chart;
+// let dummyChart;
 let markers = new Array();
 let path = new Array();
 let linearDistance = new Array();
@@ -66,8 +66,8 @@ function initMap (location) {
     hudDisplay(event.latLng);
   });
 
-  dummyChart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
-  chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
+  // dummyChart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
+  // chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
 
   elevationService = new google.maps.ElevationService();
   let input = document.getElementById('pac-input');
@@ -102,7 +102,7 @@ function initMap (location) {
   });
 
   // centerMap(map);
-  initDummyChart();
+  // initDummyChart();
   $("#pac-input").show();
   $(".loader-container").hide();
 }
@@ -147,7 +147,7 @@ function undo() {
     let lastPolyline = polyline.length - 1;
     markers[lastMarker].setMap(null);
     polyline[lastPolyline].setMap(null);
-    polyline.pop()
+    polyline.pop();
     markers.pop();
   } else {
     let lastPolyline = polyline.length - 1;
@@ -351,8 +351,6 @@ function plotPoints(theLatLng) {
     }));
   }
 
-  console.log(theLatLng);
-
   let pathOptions = {
     path: path,
     strokeColor: '#0000CC',
@@ -412,22 +410,39 @@ function plotElevation(results, status) {
   let energy = 0;
   let adjacent = (totalDistance/(samples - 1));
   let totalWeight = (pWeight + weight);
+  let lowest = 0
+  let data = {}
     if (status == google.maps.ElevationStatus.OK) {
       elevations = results;
-      let data = new google.visualization.DataTable();
-      data.addColumn('string', 'Sample');
-      data.addColumn('number', 'Elevation');
 
         for (let i = 0; i < results.length; i++) {
-          // console.log(elevations[i].location.lat(["[[Scopes]]"]["0"].a));
-          // console.log(elevations[i].location.lng(["[[Scopes]]"]["0"].a));
-          hoverLat = (elevations[i].location.lat(["[[Scopes]]"]["0"].a)).toString();
-          hoverLng = (elevations[i].location.lng(["[[Scopes]]"]["0"].a)).toString();
-          data.addRow(["Location: " + hoverLat + " " + hoverLng, elevations[i].elevation]);
-          // new google.maps.Marker({
-          //   position: {lng:elevations[i].location.lng(["[[Scopes]]"]["0"].a), lat:elevations[i].location.lat(["[[Scopes]]"]["0"].a)},
-          //   map: map
-          // });
+            if (elevations[i].elevation == elevations[0].elevation){
+              highest = elevations[i].elevation;
+            } else if (highest <= elevations[i].elevation) {
+              highest = elevations[i].elevation;
+            } else if (elevations[i].elevation <= lowest) {
+              lowest = elevations[i].elevation;
+            }
+        }
+
+        let graphHeight = highest - lowest;
+        let spacing = 1/(results.length)
+        let screenHeight = $('#elevation-chart').height();
+        let screenWidth = $('#elevation-chart').width();
+
+        for (let i = 0; i < results.length; i++) {
+          hoverLat = (elevations[i].location.lat(["[[Scopes]]"]["0"].a));
+          hoverLng = (elevations[i].location.lng(["[[Scopes]]"]["0"].a));
+
+        if (lowest>=0){
+          $('<div class="bars" style="margin-top:'+(screenHeight-((elevations[i].elevation*screenHeight)/highest))+'px; width:'+(screenWidth*spacing)+'px; height:'+(elevations[i].elevation*screenHeight)/highest+'px"></div>').appendTo("#elevation-chart").hide().fadeIn(2000);
+        } else if (lowest < 0){
+
+          if (elevations[i].elevation > 0){
+            $('<div class="bars" style="margin-top:'+(screenHeight-((elevations[i].elevation*screenHeight)/highest))+'px; width:'+(screenWidth*spacing)+'px; margin-bottom:'+((-1*lowest*screenHeight)/graphHeight)+'px; height:'+((elevations[i].elevation*screenHeight)/highest)+'px"></div>').appendTo("#elevation-chart").hide().fadeIn(2000);
+          } else
+            $('<div class="bars" style="margin-top:'+(highest*screenHeight)/graphHeight+'px; width:'+(screenWidth*spacing)+'px; margin-bottom:'+(((elevations[i].elevation*screenHeight)/lowest))+'px height:'+(elevations[i].elevation*screenHeight)/(-1*graphHeight)+'px"></div>').appendTo("#elevation-chart").hide().fadeIn(2000);
+          }
         }
 
         for (let i = 0; i < elevations.length - 1; i++) {
@@ -465,20 +480,6 @@ function plotElevation(results, status) {
     $('#completion-time').append('~' + pace + 'hrs');
     $('#average-grade').append(averageGrade.toFixed(2) + '%');
 
-    let chartOptions =  {
-      animation: {
-        startup: true
-      },
-      backgroundColor: "#475965",
-      colors: ['#a0b1bc'],
-      chartArea:{left:"5%",top:"5%",width:"90%",height:"90%"},
-      legend: 'none',
-      vAxis: {
-        textStyle:{color: ['#FFF']}
-      },
-    }
-
-    chart.draw(data, chartOptions);
     let difficulty;
 
     switch(true) {
@@ -523,90 +524,90 @@ function plotElevation(results, status) {
 
 }
 
-function initDummyChart () {
-
-  google.setOnLoadCallback(drawDummyChart);
-
-  let dummyData = google.visualization.arrayToDataTable([
-    ['Task', 'Hours per Day'],
-    ['1', 11],
-    ['2', 2],
-    ['3', 2],
-    ['4', 3],
-    ['5', 7],
-    ['6', 20],
-    ['7', 17],
-    ['8', 11],
-    ['9', 2],
-    ['10', 9]
-  ]);
-
-  let dummyOptions = {
-    animation:{
-      'duration': 2500,
-      'easing': 'out',
-    },
-    backgroundColor: "#475965",
-    colors: ['#a0b1bc'],
-    chartArea:{left:"5%",bottom:"10%",width:"90%",height:"50%"},
-    legend: 'none',
-    vAxis: {
-      textStyle:{color: ['#FFF']},
-      minValue: 0,
-      maxValue: 50,
-      textPosition: 'none'
-    },
-    title: 'Waiting to generate your path...',
-    titleTextStyle: {
-        color: '#FFF',
-        fontName: ['Roboto', 'sans-serif']
-    },
-    bar: {groupWidth: '100%'},
-    hAxis: { textPosition: 'none' },
-  };
-
-  setInterval(change, 3000);
-
-  function drawDummyChart() {
-        dummyChart.draw(dummyData, dummyOptions);
-  }
-
-  let ch=0;
-    function change(){
-      if (ch == 0) {
-        dummyData = google.visualization.arrayToDataTable([
-          ['Task', 'Hours per Day'],
-          ['1', 9],
-          ['2', 20],
-          ['3', 15],
-          ['4', 20],
-          ['5', 17],
-          ['6', 10],
-          ['7', 2],
-          ['8', 14],
-          ['9', 24],
-          ['10', 40]
-        ]);
-        ch=1;
-      } else if (ch == 1) {
-          dummyData = google.visualization.arrayToDataTable([
-            ['Task', 'Hours per Day'],
-            ['1', 18],
-            ['2', 2],
-            ['3', 12],
-            ['4', 24],
-            ['5', 41],
-            ['6', 22],
-            ['7', 40],
-            ['8', 20],
-            ['9', 2],
-            ['10', 17]
-          ]);
-          ch=0;
-      }
-      dummyChart.draw(dummyData, dummyOptions);
-  }
-}
+// function initDummyChart () {
+//
+//   google.setOnLoadCallback(drawDummyChart);
+//
+//   let dummyData = google.visualization.arrayToDataTable([
+//     ['Task', 'Hours per Day'],
+//     ['1', 11],
+//     ['2', 2],
+//     ['3', 2],
+//     ['4', 3],
+//     ['5', 7],
+//     ['6', 20],
+//     ['7', 17],
+//     ['8', 11],
+//     ['9', 2],
+//     ['10', 9]
+//   ]);
+//
+//   let dummyOptions = {
+//     animation:{
+//       'duration': 2500,
+//       'easing': 'out',
+//     },
+//     backgroundColor: "#475965",
+//     colors: ['#a0b1bc'],
+//     chartArea:{left:"5%",bottom:"10%",width:"90%",height:"50%"},
+//     legend: 'none',
+//     vAxis: {
+//       textStyle:{color: ['#FFF']},
+//       minValue: 0,
+//       maxValue: 50,
+//       textPosition: 'none'
+//     },
+//     title: 'Waiting to generate your path...',
+//     titleTextStyle: {
+//         color: '#FFF',
+//         fontName: ['Roboto', 'sans-serif']
+//     },
+//     bar: {groupWidth: '100%'},
+//     hAxis: { textPosition: 'none' },
+//   };
+//
+//   setInterval(change, 3000);
+//
+//   function drawDummyChart() {
+//         dummyChart.draw(dummyData, dummyOptions);
+//   }
+//
+//   let ch=0;
+//     function change(){
+//       if (ch == 0) {
+//         dummyData = google.visualization.arrayToDataTable([
+//           ['Task', 'Hours per Day'],
+//           ['1', 9],
+//           ['2', 20],
+//           ['3', 15],
+//           ['4', 20],
+//           ['5', 17],
+//           ['6', 10],
+//           ['7', 2],
+//           ['8', 14],
+//           ['9', 24],
+//           ['10', 40]
+//         ]);
+//         ch=1;
+//       } else if (ch == 1) {
+//           dummyData = google.visualization.arrayToDataTable([
+//             ['Task', 'Hours per Day'],
+//             ['1', 18],
+//             ['2', 2],
+//             ['3', 12],
+//             ['4', 24],
+//             ['5', 41],
+//             ['6', 22],
+//             ['7', 40],
+//             ['8', 20],
+//             ['9', 2],
+//             ['10', 17]
+//           ]);
+//           ch=0;
+//       }
+//       dummyChart.draw(dummyData, dummyOptions);
+//   }
+// }
 
 $(document).ready(function (){
   navigator.geolocation.getCurrentPosition(initMap,
