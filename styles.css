@@ -23,6 +23,12 @@ justify-content: center;
 flex-direction: column;
 }
 #elevation-chart {
+background: linear-gradient(181deg, #606c74, #38424b, #606c74);
+background-size: 600% 600%;
+
+-webkit-animation: MapFlow 22s ease infinite;
+-moz-animation: MapFlow 22s ease infinite;
+animation: MapFlow 22s ease infinite;
 background-color:	#475965;
 min-height: 20vh;
 min-width: 100vw;
@@ -33,7 +39,6 @@ padding-top: 10px;
 padding-bottom: 10px;
 }
 #header {
-/*overflow: auto;*/
 color: #ffffff;
 background-color: #38424B;
 min-height: 5vh;
@@ -663,11 +668,56 @@ vertical-align: middle;
 }
 
 .bars {
-  background-color: black;
-  border-radius: 1px 1px 0px 0px;
-  transition: 0.1s;
+  background-color: rgba(27, 32, 37, 1);
+  border-radius: 1px 1px 1px 1px;
+  /*transition: 0.1s;*/
+  overflow: hidden;
 }
 .bars:hover{
-  background-color: yellow;
-  /*transition: 0.1s;*/
+    background-color: rgba(27, 32, 37, 0.2);
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 225px;
+  background-color: rgba(27, 32, 37, 0.75);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 5;
+  margin-left: -111px;
+  text-align: left;
+}
+
+.bars .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.bars:hover span {
+    visibility: visible;
+}
+
+@-webkit-keyframes MapFlow {
+  0%{background-position:50% 0%}
+  50%{background-position:51% 100%}
+  100%{background-position:50% 0%}
+}
+@-moz-keyframes MapFlow {
+  0%{background-position:50% 0%}
+  50%{background-position:51% 100%}
+  100%{background-position:50% 0%}
+}
+@keyframes MapFlow {
+  0%{background-position:50% 0%}
+  50%{background-position:51% 100%}
+  100%{background-position:50% 0%}
 }

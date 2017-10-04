@@ -1,8 +1,6 @@
 let elevationService;
 let map;
 let polyline = new Array();
-// let chart;
-// let dummyChart;
 let markers = new Array();
 let path = new Array();
 let linearDistance = new Array();
@@ -15,10 +13,7 @@ let rubberPolylines = new Array();
 let units = "metric";
 let generated = false;
 let geolocated = true;
-// let radius;
-// let radii = new Array();
-
-google.load('visualization', '1', {packages: ['corechart']});
+let referenceMarker;
 
 function initMap (location) {
 
@@ -66,9 +61,6 @@ function initMap (location) {
     hudDisplay(event.latLng);
   });
 
-  // dummyChart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
-  // chart = new google.visualization.ColumnChart(document.getElementById('elevation-chart'));
-
   elevationService = new google.maps.ElevationService();
   let input = document.getElementById('pac-input');
   let searchBox = new google.maps.places.SearchBox(input);
@@ -100,19 +92,9 @@ function initMap (location) {
     map.fitBounds(bounds);
     $("#pac-input").val('');
   });
-
-  // centerMap(map);
-  // initDummyChart();
   $("#pac-input").show();
   $(".loader-container").hide();
 }
-
-// function centerMap(map) {
-//   let center = map.getCenter();
-//   document.getElementById("map-canvas").style.width = '100%';
-//   google.maps.event.trigger(map, 'resize');
-//   map.setCenter(center);
-// }
 
 function reset() {
   generated = true;
@@ -122,8 +104,6 @@ function reset() {
   for (let i = 0; i < polyline.length; i++) {
     polyline[i].setMap(null);
   }
-  // rubberPolylines[0].setMap(null);
-  // rubberPolylines = new Array();
   absoluteDistance = new Array();
   markers = new Array();
   path = new Array();
@@ -134,7 +114,11 @@ function reset() {
   $('.results').html("&nbsp;");
   $('#difficulty').html('&nbsp;');
   $('#vector').html('&nbsp;');
-    // map.getCenter(initMap);
+  function timer() {
+    $('#elevation-chart').html('');
+  }
+  setTimeout(timer, 400);
+  $('.bars').fadeOut(300);
 }
 
 function undo() {
@@ -192,18 +176,6 @@ function toMetric() {
   $('#finishing-elevation').html(finishingElevation.toFixed(2) + 'm');
 }
 
-// function removeRadius() {
-//     radii[0].setMap(null);
-//     radii.shift();
-// }
-
-function removeRubberPolyline() {
-  // if (rubberPolylines.length > 1) {
-  //   rubberPolylines[0].setMap(null);
-  //   rubberPolylines.shift();
-  // }
-}
-
 function hudDisplay(point) {
 
   let coordsLabel = document.getElementById("tdCursor");
@@ -229,21 +201,6 @@ function hudDisplay(point) {
         let heading1;
         let heading2;
 
-        // Radius feature
-        // let radiusOptions = {
-        //     strokeColor: '#FF0000',
-        //     strokeOpacity: 0.8,
-        //     strokeWeight: 2,
-        //     fillColor: '#FF0000',
-        //     fillOpacity: 0,
-        //     map: map,
-        //     center: lastElement,
-        //     radius: vector
-        // }
-        // radius = new google.maps.Circle(radiusOptions);
-        // radii.push(radius)
-        // setTimeout(removeRadius, 100);
-
         let rubberPath = [
           {lat: lastLat, lng: lastLng},
           {lat: point.lat(), lng: point.lng()}
@@ -256,9 +213,6 @@ function hudDisplay(point) {
           geodesic: true,
           map: map
         };
-        // rubberPolyline = new google.maps.Polyline(rubberOptions);
-        // rubberPolylines.push(rubberPolyline);
-        // setTimeout(removeRubberPolyline, 1);
 
         switch(true) {
           case ( segmentHeading >= -180 && segmentHeading < -135 ):
@@ -435,15 +389,17 @@ function plotElevation(results, status) {
           hoverLng = (elevations[i].location.lng(["[[Scopes]]"]["0"].a));
 
         if (lowest>=0){
-          $('<div class="bars" style="margin-top:'+(screenHeight-((elevations[i].elevation*screenHeight)/highest))+'px; width:'+(screenWidth*spacing)+'px; height:'+(elevations[i].elevation*screenHeight)/highest+'px"></div>').appendTo("#elevation-chart").hide().fadeIn(2000);
+          $('<div class="bars" onmouseover="referenceMap('+hoverLat+','+hoverLng+','+elevations[i].elevation+');" onmouseleave="stopReference();" style="margin-top:'+(screenHeight-((elevations[i].elevation*screenHeight)/highest))+'px; width:'+(screenWidth*spacing)+'px; height:'+(elevations[i].elevation*screenHeight)/highest+'px">  <span class="tooltiptext" style="bottom:'+((screenHeight*elevations[i].elevation/highest)+18)+'px; left:'+(screenWidth*spacing*(i+1))+'">Latitude: '+hoverLat+'<br>Longitude: '+hoverLng+'<br>Elevation: '+elevations[i].elevation+'</span></div>').appendTo("#elevation-chart").hide().fadeIn(3000);
         } else if (lowest < 0){
-
           if (elevations[i].elevation > 0){
-            $('<div class="bars" style="margin-top:'+(screenHeight-((elevations[i].elevation*screenHeight)/highest))+'px; width:'+(screenWidth*spacing)+'px; margin-bottom:'+((-1*lowest*screenHeight)/graphHeight)+'px; height:'+((elevations[i].elevation*screenHeight)/highest)+'px"></div>').appendTo("#elevation-chart").hide().fadeIn(2000);
-          } else
-            $('<div class="bars" style="margin-top:'+(highest*screenHeight)/graphHeight+'px; width:'+(screenWidth*spacing)+'px; margin-bottom:'+(((elevations[i].elevation*screenHeight)/lowest))+'px height:'+(elevations[i].elevation*screenHeight)/(-1*graphHeight)+'px"></div>').appendTo("#elevation-chart").hide().fadeIn(2000);
+            $('<div class="bars" onmouseover="referenceMap('+hoverLat+','+hoverLng+','+elevations[i].elevation+');" onmouseleave="stopReference();" style="margin-top:'+(screenHeight-(-1*lowest*screenHeight/graphHeight)-(elevations[i].elevation*screenHeight/graphHeight))+'px; width:'+(screenWidth*spacing)+'px; margin-bottom:'+(-1*lowest*screenHeight/graphHeight)+'px; height:'+(elevations[i].elevation*screenHeight/graphHeight)+'px"><span class="tooltiptext" style="bottom:'+((elevations[i].elevation*screenHeight/graphHeight)+(-1*lowest*screenHeight/graphHeight)+18)+'px; left:'+(screenWidth*spacing*(i+1))+'">Latitude: '+hoverLat+'<br>Longitude: '+hoverLng+'<br>Elevation: '+elevations[i].elevation+'</span></div>').appendTo("#elevation-chart").hide().fadeIn(3000);
+          } else if (elevations[i].elevation < 0) {
+              $('<div class="bars"  onmouseover="referenceMap('+hoverLat+','+hoverLng+','+elevations[i].elevation+');" onmouseleave="stopReference();" style="margin-top:'+(highest*screenHeight/graphHeight)+'px; width:'+(screenWidth*spacing)+'px; margin-bottom:'+(screenHeight-(highest*screenHeight/graphHeight)-((elevations[i].elevation*screenHeight)/lowest))+'px; height:'+((elevations[i].elevation*screenHeight)/(-1*graphHeight))+'px"><span class="tooltiptext" style="bottom:'+((lowest*-1*screenHeight/graphHeight)+18)+'px; left:'+(screenWidth*spacing*(i+1))+'">Latitude: '+hoverLat+'<br>Longitude: '+hoverLng+'<br>Elevation: '+elevations[i].elevation+'</span></div>').appendTo("#elevation-chart").hide().fadeIn(3000);
+          } else {
+              $('<div class="bars"  onmouseover="referenceMap('+hoverLat+','+hoverLng+','+elevations[i].elevation+');" onmouseleave="stopReference();" style="width:'+(screenWidth*spacing)+'px; height:'+(screenHeight)+'px; background-color: rgba(27, 32, 37, 0.0);"><span class="tooltiptext" style="bottom:'+((lowest*-1*screenHeight/graphHeight)+18)+'px; left:'+(screenWidth*spacing*(i+1))+'">Latitude: '+hoverLat+'<br>Longitude: '+hoverLng+'<br>Elevation: '+elevations[i].elevation+'</span></div>').appendTo("#elevation-chart").hide().fadeIn(3000);
           }
         }
+      }
 
         for (let i = 0; i < elevations.length - 1; i++) {
           absoluteDistance.push(((adjacent**2)+((elevations[i+1].elevation - elevations[i].elevation)**2))**0.5);
@@ -524,91 +480,6 @@ function plotElevation(results, status) {
 
 }
 
-// function initDummyChart () {
-//
-//   google.setOnLoadCallback(drawDummyChart);
-//
-//   let dummyData = google.visualization.arrayToDataTable([
-//     ['Task', 'Hours per Day'],
-//     ['1', 11],
-//     ['2', 2],
-//     ['3', 2],
-//     ['4', 3],
-//     ['5', 7],
-//     ['6', 20],
-//     ['7', 17],
-//     ['8', 11],
-//     ['9', 2],
-//     ['10', 9]
-//   ]);
-//
-//   let dummyOptions = {
-//     animation:{
-//       'duration': 2500,
-//       'easing': 'out',
-//     },
-//     backgroundColor: "#475965",
-//     colors: ['#a0b1bc'],
-//     chartArea:{left:"5%",bottom:"10%",width:"90%",height:"50%"},
-//     legend: 'none',
-//     vAxis: {
-//       textStyle:{color: ['#FFF']},
-//       minValue: 0,
-//       maxValue: 50,
-//       textPosition: 'none'
-//     },
-//     title: 'Waiting to generate your path...',
-//     titleTextStyle: {
-//         color: '#FFF',
-//         fontName: ['Roboto', 'sans-serif']
-//     },
-//     bar: {groupWidth: '100%'},
-//     hAxis: { textPosition: 'none' },
-//   };
-//
-//   setInterval(change, 3000);
-//
-//   function drawDummyChart() {
-//         dummyChart.draw(dummyData, dummyOptions);
-//   }
-//
-//   let ch=0;
-//     function change(){
-//       if (ch == 0) {
-//         dummyData = google.visualization.arrayToDataTable([
-//           ['Task', 'Hours per Day'],
-//           ['1', 9],
-//           ['2', 20],
-//           ['3', 15],
-//           ['4', 20],
-//           ['5', 17],
-//           ['6', 10],
-//           ['7', 2],
-//           ['8', 14],
-//           ['9', 24],
-//           ['10', 40]
-//         ]);
-//         ch=1;
-//       } else if (ch == 1) {
-//           dummyData = google.visualization.arrayToDataTable([
-//             ['Task', 'Hours per Day'],
-//             ['1', 18],
-//             ['2', 2],
-//             ['3', 12],
-//             ['4', 24],
-//             ['5', 41],
-//             ['6', 22],
-//             ['7', 40],
-//             ['8', 20],
-//             ['9', 2],
-//             ['10', 17]
-//           ]);
-//           ch=0;
-//       }
-//       dummyChart.draw(dummyData, dummyOptions);
-//   }
-// }
-
 $(document).ready(function (){
   navigator.geolocation.getCurrentPosition(initMap,
     function (error) {
@@ -687,6 +558,23 @@ function alertDrawFirst() {
 function alertNoNewPaths() {
   $(".alert-warning").css("opacity","1");
   $(".alert-warning").css("z-index","5");
-  $(".alert-warning").html('No new paths added!          <span class="close-alert-btn" onclick="closeAlert()">&nbsp;&times;</span>');
+  $(".alert-warning").html('No new paths added!<span class="close-alert-btn" onclick="closeAlert()">&nbsp;&times;</span>');
   setTimeout(closeAlert, 7500);
+}
+
+function referenceMap(lat,lng,elev) {
+  if (referenceMarker != null) {
+  referenceMarker.setMap(null);
+  }
+  referenceMarker = new google.maps.Marker({
+    position: {lat:lat, lng:lng},
+    map: map,
+    icon: {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+          scale: 4
+        }
+  })
+}
+
+function stopReference() {
+  referenceMarker.setMap(null);
 }
